@@ -8,12 +8,16 @@ def paraboloid(args: list[float]) -> float:
     x1, x2 = args[0], args[1]
     return x1**2 + x2**2 
 
+def gradient_descent_formula(argument: float, learning_rate: float, vector_arg: float) -> float:
+    new_xt = argument - learning_rate*vector_arg
+    return new_xt
 
 def calculate_gradient(learning_rate: float, xt: list[float], iteration_number: int): 
     function_gradient = autograd.grad(paraboloid)
     for i in range(iteration_number):
         vector_gradient = function_gradient(anp.array(xt))
         print(vector_gradient)
+        
 
 def visualize_fun(obj_fun: callable, trajectory: np.ndarray): #type: ignore
     min_x, min_y = trajectory[-1]
@@ -40,4 +44,4 @@ def visualize_fun(obj_fun: callable, trajectory: np.ndarray): #type: ignore
     plt.show()
 
 
-calculate_gradient(.1, [1.0, 2.0], 3)
+calculate_gradient(learning_rate=.1, xt=[1.0, 2.0], iteration_number=3)
