@@ -1,5 +1,6 @@
 import matplotlib.pyplot as plt
 import numpy as np
+from autograd.differential_operators import GD
 
 
 def visualize_fun(obj_fun: callable, trajectory: np.ndarray):
@@ -26,21 +27,3 @@ def visualize_fun(obj_fun: callable, trajectory: np.ndarray):
     plt.legend()
     plt.show()
 
-# 1. Definiujemy funkcję celu (np. miska/paraboloida)
-# f(x1, x2) = x1^2 + x2^2
-def my_bowl_function(x1, x2):
-    return x1**2 + x2**2
-
-# 2. Tworzymy sztuczną trajektorię "schodzenia" do minimum
-# Algorytm startuje w (8, 8) i idzie w stronę (0, 0)
-fake_trajectory = np.array([
-    [8.0, 8.0],
-    [6.0, 6.0],
-    [4.0, 3.5],
-    [2.0, 2.0],
-    [1.0, 0.5],
-    [0.1, 0.1]  # To zostanie uznane za znalezione minimum (ostatni element)
-])
-
-# 3. Wywołanie Twojej funkcji
-visualize_fun(my_bowl_function, fake_trajectory)
