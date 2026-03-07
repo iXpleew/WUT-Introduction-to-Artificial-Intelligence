@@ -1,9 +1,20 @@
 import matplotlib.pyplot as plt
+import autograd.numpy as anp
 import numpy as np
-from autograd.differential_operators import GD
+import autograd
+ 
+
+def paraboloid(args: list[float]) -> float:
+    x1, x2 = args[0], args[1]
+    return x1**2 + x2**2 
 
 
-def visualize_fun(obj_fun: callable, trajectory: np.ndarray):
+def calculate_gradient(): 
+   function_gradient = autograd.grad(paraboloid)
+   vector_gradient = function_gradient(anp.array([1.0,2.0]))
+   print(vector_gradient)
+
+def visualize_fun(obj_fun: callable, trajectory: np.ndarray): #type: ignore
     min_x, min_y = trajectory[-1]
     MIN_X = 10
     MAX_X = 10
@@ -27,3 +38,5 @@ def visualize_fun(obj_fun: callable, trajectory: np.ndarray):
     plt.legend()
     plt.show()
 
+
+calculate_gradient()
