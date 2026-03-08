@@ -4,6 +4,13 @@ import autograd.numpy as anp
 import numpy as np
 import autograd
 from typing import Callable
+# co zmienic:
+# - usunac suwak
+# - dodac argparse
+# - dodac druga funkcje
+# - parametry skoku, liczbe iteracji
+# - wykres skoku i wniosek w pdf jaki ma wplyw na algorytm
+# - wykres punktow i jak sie zmianiaja 
  
 
 def paraboloid(args: list[float]) -> float:
