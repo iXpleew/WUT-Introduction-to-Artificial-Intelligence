@@ -36,9 +36,10 @@ def calculate_gradient_path(function: Callable, learning_rate: float, iteration_
     return np.array(gradient_history)
         
 
-def visualize_fun(obj_fun: Callable, rate: float, iteration: int): 
-    trajectory = calculate_gradient_path(obj_fun, learning_rate=rate, iteration_number=iteration)
-    min_x, min_y = trajectory[-1]
+def visualize_fun(obj_fun: Callable, trajectories: np.ndarray): 
+    min_x1, min_y1 = trajectories[0][-1]
+    min_x2, min_y2 = trajectories[1][-1]
+    min_x3, min_y3 = trajectories[2][-1]
     MIN_X = 10
     MAX_X = 10
     PLOT_STEP = 100
@@ -57,27 +58,21 @@ def visualize_fun(obj_fun: Callable, rate: float, iteration: int):
     ax1.set_ylabel('x2')
     ax1.set_title('Objective Function Visualization')
 
-    x1_ax_slider = fig.add_axes((0.127, 0.05, 0.28, 0.03))
-    x2_ax_slider = fig.add_axes((0.05, 0.25, 0.03, 0.65))
+    ax1.scatter(min_x1, min_y1, color='yellow')
+    ax1.plot(trajectories[0][:, 0], trajectories[0][:, 1], marker='o', color='red', alpha=0.5)
 
-    x1_slider = Slider(ax=x1_ax_slider, label="x1", valmin=-10.0, valmax=10.0, valinit=0, orientation='horizontal')
-    x2_slider = Slider(ax=x2_ax_slider, label="x2", valmin=-10.0, valmax=10.0, valinit=0, orientation="vertical")
+    ax1.scatter(min_x1, min_y1, color='yellow')
+    ax1.plot(trajectories[0][:, 0], trajectories[0][:, 1], marker='o', color='red', alpha=0.5)
 
-    minimum = ax1.scatter(min_x, min_y, color='yellow', label='Minimum found by gradient descent alg.')
-    trajectory_path, = ax1.plot(trajectory[:, 0], trajectory[:, 1], marker='o', color='red', label='Gradient Descent Steps', alpha=0.5)
+    ax1.scatter(min_x2, min_y2, color='yellow')
+    ax1.plot(trajectories[1][:, 0], trajectories[1][:, 1], marker='o', color='red', alpha=0.5)
 
-    def update_plot(val):
-        new_points = [x1_slider.val, x2_slider.val]
-        trajectory = calculate_gradient_path(obj_fun, rate, iteration, new_points)
-        trajectory_path.set_data(trajectory[:, 0], trajectory[:, 1])
-        minimum.set_offsets([trajectory[-1, 0], trajectory[-1,1]])
-
-        fig.canvas.draw_idle()
-
-    x1_slider.on_changed(update_plot)
-    x2_slider.on_changed(update_plot)
-
+    ax1.scatter(min_x3, min_y3, color='yellow')
+    ax1.plot(trajectories[2][:, 0], trajectories[2][:, 1], marker='o', color='red', alpha=0.5)
     ax1.legend()
     plt.show()
 
-visualize_fun(paraboloid, rate=0.2, iteration = 10)
+first_traj = calculate_gradient_path(paraboloid, 0.9, 2, [1., 1.])
+second_traj = calculate_gradient_path(paraboloid, 0.2, 5, [10., -4.])
+third_traj = calculate_gradient_path(paraboloid, 0.01, 1000, [6., -7.])
+visualize_fun(paraboloid, [first_traj, second_traj, third_traj])
