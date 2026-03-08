@@ -14,7 +14,9 @@ def gradient_descent_formula(argument: float, learning_rate: float, vector_arg: 
     new_xt = argument - learning_rate*vector_arg
     return new_xt
 
-def calculate_gradient_path(function: Callable, learning_rate: float, iteration_number: int, xt=[.0,.0]): 
+def calculate_gradient_path(function: Callable, learning_rate: float, iteration_number: int, xt=None): 
+    if xt is None:
+        xt = [0.0, 0.0]
     function_gradient = autograd.grad(function) # type: ignore
     gradient_history = [[xt[0], xt[1]]]
     for i in range(iteration_number):
@@ -71,4 +73,4 @@ def visualize_fun(obj_fun: Callable, rate: float, iteration: int):
     ax1.legend()
     plt.show()
 
-visualize_fun(paraboloid, rate=0.1, iteration = 100)
+visualize_fun(paraboloid, rate=0.2, iteration = 10)
