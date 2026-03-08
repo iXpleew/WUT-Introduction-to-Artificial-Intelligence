@@ -3,6 +3,7 @@ from matplotlib.widgets import Slider
 import autograd.numpy as anp
 import numpy as np
 import autograd
+from typing import Callable
  
 
 def paraboloid(args: list[float]) -> float:
@@ -13,8 +14,8 @@ def gradient_descent_formula(argument: float, learning_rate: float, vector_arg: 
     new_xt = argument - learning_rate*vector_arg
     return new_xt
 
-def calculate_gradient_path(function: callable, xt: list[float], learning_rate: float, iteration_number: int): 
-    function_gradient = autograd.grad(function)
+def calculate_gradient_path(function: Callable, learning_rate: float, iteration_number: int, xt=[.0,.0]): 
+    function_gradient = autograd.grad(function) # type: ignore
     gradient_history = [[xt[0], xt[1]]]
     for i in range(iteration_number):
         vector_gradient = function_gradient(anp.array(xt))
@@ -26,7 +27,8 @@ def calculate_gradient_path(function: callable, xt: list[float], learning_rate: 
     return np.array(gradient_history)
         
 
-def visualize_fun(obj_fun: callable, trajectory: np.ndarray, rate: float, iteration: int): #type: ignore
+def visualize_fun(obj_fun: Callable, rate: float, iteration: int): 
+    trajectory = calculate_gradient_path(obj_fun, learning_rate=rate, iteration_number=iteration)
     min_x, min_y = trajectory[-1]
     MIN_X = 10
     MAX_X = 10
@@ -46,8 +48,8 @@ def visualize_fun(obj_fun: callable, trajectory: np.ndarray, rate: float, iterat
     ax1.set_ylabel('x2')
     ax1.set_title('Objective Function Visualization')
 
-    x1_ax_slider = fig.add_axes([0.127, 0.05, 0.28, 0.03])
-    x2_ax_slider = fig.add_axes([0.05, 0.25, 0.03, 0.65])
+    x1_ax_slider = fig.add_axes((0.127, 0.05, 0.28, 0.03))
+    x2_ax_slider = fig.add_axes((0.05, 0.25, 0.03, 0.65))
 
     x1_slider = Slider(ax=x1_ax_slider, label="x1", valmin=-10.0, valmax=10.0, valinit=0, orientation='horizontal')
     x2_slider = Slider(ax=x2_ax_slider, label="x2", valmin=-10.0, valmax=10.0, valinit=0, orientation="vertical")
@@ -57,7 +59,7 @@ def visualize_fun(obj_fun: callable, trajectory: np.ndarray, rate: float, iterat
 
     def update_plot(val):
         new_points = [x1_slider.val, x2_slider.val]
-        trajectory = calculate_gradient_path(obj_fun, new_points, rate, iteration)
+        trajectory = calculate_gradient_path(obj_fun, rate, iteration, new_points)
         trajectory_path.set_data(trajectory[:, 0], trajectory[:, 1])
         minimum.set_offsets([trajectory[-1, 0], trajectory[-1,1]])
 
@@ -69,6 +71,4 @@ def visualize_fun(obj_fun: callable, trajectory: np.ndarray, rate: float, iterat
     ax1.legend()
     plt.show()
 
-
-trajectory = calculate_gradient_path(paraboloid, learning_rate=.1, xt=[0., 0.], iteration_number=100)
-visualize_fun(paraboloid, trajectory, rate=0.1, iteration = 100)
+visualize_fun(paraboloid, rate=0.1, iteration = 100)
