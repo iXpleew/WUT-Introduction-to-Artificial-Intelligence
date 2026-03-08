@@ -26,7 +26,7 @@ def calculate_gradient_path(function: callable, xt: list[float], learning_rate: 
     return np.array(gradient_history)
         
 
-def visualize_fun(obj_fun: callable, trajectory: np.ndarray): #type: ignore
+def visualize_fun(obj_fun: callable, trajectory: np.ndarray, rate: float, iteration: int): #type: ignore
     min_x, min_y = trajectory[-1]
     MIN_X = 10
     MAX_X = 10
@@ -55,9 +55,20 @@ def visualize_fun(obj_fun: callable, trajectory: np.ndarray): #type: ignore
     ax1.scatter(min_x, min_y, color='yellow', label='Minimum found by gradient descent alg.')
     ax1.plot(trajectory[:, 0], trajectory[:, 1], marker='o', color='red', label='Gradient Descent Steps', alpha=0.5)
 
+    def update_plot(val):
+        new_points = [x1_slider.val, x2_slider.val]
+        trajectory = calculate_gradient_path(obj_fun, new_points, rate, iteration)
+        fig.canvas.draw_idle()
+        min_x, min_y = trajectory[-1]
+        ax1.scatter(min_x, min_y, color='yellow', label='Minimum found by gradient descent alg.')
+        ax1.plot(trajectory[:, 0], trajectory[:, 1], marker='o', color='red', label='Gradient Descent Steps', alpha=0.5)
+
+    x1_slider.on_changed(update_plot)
+    x2_slider.on_changed(update_plot)
+
     ax1.legend()
     plt.show()
 
 
 trajectory = calculate_gradient_path(paraboloid, learning_rate=.1, xt=[0., 0.], iteration_number=100)
-visualize_fun(paraboloid, trajectory)
+visualize_fun(paraboloid, trajectory, rate=0.1, iteration = 100)
