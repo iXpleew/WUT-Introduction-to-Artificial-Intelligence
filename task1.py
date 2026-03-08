@@ -7,7 +7,7 @@ import autograd
 def paraboloid(args: list[float]) -> float:
     x1, x2 = args[0], args[1]
     # return x1**2 + x2**2
-    return  0.26*(x1**2 + x2**2) - 0.48*x1*x2
+    return 0.26*(x1**2 + x2**2) - 0.48*x1*x2
 
 def gradient_descent_formula(argument: float, learning_rate: float, vector_arg: float) -> float:
     new_xt = argument - learning_rate*vector_arg
@@ -21,7 +21,8 @@ def calculate_gradient(learning_rate: float, xt: list[float], iteration_number: 
         xt[0] = gradient_descent_formula(xt[0], learning_rate, vector_gradient[0])
         xt[1] = gradient_descent_formula(xt[1], learning_rate, vector_gradient[1])
         gradient_history.append([xt[0], xt[1]])
-        print(vector_gradient)
+        if i >= 999: 
+            break
     return np.array(gradient_history)
         
 
@@ -50,5 +51,5 @@ def visualize_fun(obj_fun: callable, trajectory: np.ndarray): #type: ignore
     plt.show()
 
 
-trajectory = calculate_gradient(learning_rate=.1, xt=[8.24, -10.0], iteration_number=10)
+trajectory = calculate_gradient(learning_rate=.1, xt=[8.24, -10.0], iteration_number=100)
 visualize_fun(paraboloid, trajectory)
