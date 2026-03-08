@@ -52,16 +52,16 @@ def visualize_fun(obj_fun: callable, trajectory: np.ndarray, rate: float, iterat
     x1_slider = Slider(ax=x1_ax_slider, label="x1", valmin=-10.0, valmax=10.0, valinit=0, orientation='horizontal')
     x2_slider = Slider(ax=x2_ax_slider, label="x2", valmin=-10.0, valmax=10.0, valinit=0, orientation="vertical")
 
-    ax1.scatter(min_x, min_y, color='yellow', label='Minimum found by gradient descent alg.')
-    ax1.plot(trajectory[:, 0], trajectory[:, 1], marker='o', color='red', label='Gradient Descent Steps', alpha=0.5)
+    minimum = ax1.scatter(min_x, min_y, color='yellow', label='Minimum found by gradient descent alg.')
+    trajectory_path, = ax1.plot(trajectory[:, 0], trajectory[:, 1], marker='o', color='red', label='Gradient Descent Steps', alpha=0.5)
 
     def update_plot(val):
         new_points = [x1_slider.val, x2_slider.val]
         trajectory = calculate_gradient_path(obj_fun, new_points, rate, iteration)
+        trajectory_path.set_data(trajectory[:, 0], trajectory[:, 1])
+        minimum.set_offsets([trajectory[-1, 0], trajectory[-1,1]])
+
         fig.canvas.draw_idle()
-        min_x, min_y = trajectory[-1]
-        ax1.scatter(min_x, min_y, color='yellow', label='Minimum found by gradient descent alg.')
-        ax1.plot(trajectory[:, 0], trajectory[:, 1], marker='o', color='red', label='Gradient Descent Steps', alpha=0.5)
 
     x1_slider.on_changed(update_plot)
     x2_slider.on_changed(update_plot)
