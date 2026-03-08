@@ -1,5 +1,4 @@
 import matplotlib.pyplot as plt
-from matplotlib.widgets import Slider
 import autograd.numpy as anp
 import numpy as np
 import autograd
@@ -68,12 +67,17 @@ def visualize_fun(obj_fun: Callable, trajectories: list[np.ndarray]):
 
     set_scatters(min_x1, min_y1, trajectories[0])
     set_scatters(min_x2, min_y2, trajectories[1])
-    set_scatters(min_x3, min_y3, trajectories[2])   
+    set_scatters(min_x3, min_y3, trajectories[2])
+    values = []
+    for vector in trajectories[1]:
+        values.append(paraboloid(vector))
+
+    ax2.plot(range(len(trajectories[1])), values)  
     
     ax1.legend()
     plt.show()
 
 first_traj = calculate_gradient_path(paraboloid, 0.9, 2, [1., 1.])
-second_traj = calculate_gradient_path(paraboloid, 0.2, 5, [10., -4.])
+second_traj = calculate_gradient_path(paraboloid, 0.2, 10, [10., -4.])
 third_traj = calculate_gradient_path(paraboloid, 0.01, 1000, [6., -7.])
 visualize_fun(paraboloid, [first_traj, second_traj, third_traj])
