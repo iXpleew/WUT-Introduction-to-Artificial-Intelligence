@@ -17,6 +17,10 @@ def paraboloid(args: list[float]) -> float:
     x1, x2 = args[0], args[1]
     return x1**2 + x2**2
 
+def matyas(args: list[float]) -> float:
+    x1, x2 = args[0], args[1]
+    return 0.0
+
 def gradient_descent_formula(argument: float, learning_rate: float, vector_arg: float) -> float:
     new_xt = argument - learning_rate*vector_arg
     return new_xt
@@ -36,7 +40,7 @@ def calculate_gradient_path(function: Callable, learning_rate: float, iteration_
     return np.array(gradient_history)
         
 
-def visualize_fun(obj_fun: Callable, trajectories: np.ndarray): 
+def visualize_fun(obj_fun: Callable, trajectories: list[np.ndarray]): 
     min_x1, min_y1 = trajectories[0][-1]
     min_x2, min_y2 = trajectories[1][-1]
     min_x3, min_y3 = trajectories[2][-1]
@@ -58,17 +62,14 @@ def visualize_fun(obj_fun: Callable, trajectories: np.ndarray):
     ax1.set_ylabel('x2')
     ax1.set_title('Objective Function Visualization')
 
-    ax1.scatter(min_x1, min_y1, color='yellow')
-    ax1.plot(trajectories[0][:, 0], trajectories[0][:, 1], marker='o', color='red', alpha=0.5)
+    def set_scatters(min, max, trajectory):
+        ax1.scatter(min, max, color="yellow")
+        ax1.plot(trajectory[:, 0], trajectory[:, 1], marker='o', color='red', alpha = 0.5)
 
-    ax1.scatter(min_x1, min_y1, color='yellow')
-    ax1.plot(trajectories[0][:, 0], trajectories[0][:, 1], marker='o', color='red', alpha=0.5)
-
-    ax1.scatter(min_x2, min_y2, color='yellow')
-    ax1.plot(trajectories[1][:, 0], trajectories[1][:, 1], marker='o', color='red', alpha=0.5)
-
-    ax1.scatter(min_x3, min_y3, color='yellow')
-    ax1.plot(trajectories[2][:, 0], trajectories[2][:, 1], marker='o', color='red', alpha=0.5)
+    set_scatters(min_x1, min_y1, trajectories[0])
+    set_scatters(min_x2, min_y2, trajectories[1])
+    set_scatters(min_x3, min_y3, trajectories[2])   
+    
     ax1.legend()
     plt.show()
 
