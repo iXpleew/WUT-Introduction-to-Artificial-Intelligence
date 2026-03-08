@@ -1,4 +1,5 @@
 import matplotlib.pyplot as plt
+from matplotlib.widgets import Slider
 import autograd.numpy as anp
 import numpy as np
 import autograd
@@ -6,15 +7,14 @@ import autograd
 
 def paraboloid(args: list[float]) -> float:
     x1, x2 = args[0], args[1]
-    # return x1**2 + x2**2
-    return 0.26*(x1**2 + x2**2) - 0.48*x1*x2
+    return x1**2 + x2**2
 
 def gradient_descent_formula(argument: float, learning_rate: float, vector_arg: float) -> float:
     new_xt = argument - learning_rate*vector_arg
     return new_xt
 
-def calculate_gradient(learning_rate: float, xt: list[float], iteration_number: int): 
-    function_gradient = autograd.grad(paraboloid)
+def calculate_gradient_path(function: callable, xt: list[float], learning_rate: float, iteration_number: int): 
+    function_gradient = autograd.grad(function)
     gradient_history = [[xt[0], xt[1]]]
     for i in range(iteration_number):
         vector_gradient = function_gradient(anp.array(xt))
@@ -37,19 +37,27 @@ def visualize_fun(obj_fun: callable, trajectory: np.ndarray): #type: ignore
     X1, X2 = np.meshgrid(x1, x2)
     Z = obj_fun([X1, X2])
 
-    plt.figure(figsize=(8, 6))
-    plt.pcolormesh(X1, X2, Z, cmap='viridis', shading='auto')
-    plt.colorbar(label='Objective Function Value')
-    plt.xlabel('x1')
-    plt.ylabel('x2')
-    plt.title('Objective Function Visualization')
+    fig, (ax1, ax2) = plt.subplots(1,2, figsize=(12, 6))
 
-    plt.scatter(min_x, min_y, color='yellow', label='Minimum found by gradient descent alg.')
-    plt.plot(trajectory[:, 0], trajectory[:, 1], marker='o', color='red', label='Gradient Descent Steps', alpha=0.5)
+    plt.subplots_adjust(bottom=0.25)
+    map = ax1.pcolormesh(X1, X2, Z, cmap='viridis', shading='auto')
+    fig.colorbar(map, ax=ax1, label='Objective Function Value')
+    ax1.set_xlabel('x1')
+    ax1.set_ylabel('x2')
+    ax1.set_title('Objective Function Visualization')
 
-    plt.legend()
+    x1_ax_slider = fig.add_axes([0.127, 0.05, 0.28, 0.03])
+    x2_ax_slider = fig.add_axes([0.05, 0.25, 0.03, 0.65])
+
+    x1_slider = Slider(ax=x1_ax_slider, label="x1", valmin=-10.0, valmax=10.0, valinit=0, orientation='horizontal')
+    x2_slider = Slider(ax=x2_ax_slider, label="x2", valmin=-10.0, valmax=10.0, valinit=0, orientation="vertical")
+
+    ax1.scatter(min_x, min_y, color='yellow', label='Minimum found by gradient descent alg.')
+    ax1.plot(trajectory[:, 0], trajectory[:, 1], marker='o', color='red', label='Gradient Descent Steps', alpha=0.5)
+
+    ax1.legend()
     plt.show()
 
 
-trajectory = calculate_gradient(learning_rate=.1, xt=[8.24, -10.0], iteration_number=100)
+trajectory = calculate_gradient_path(paraboloid, learning_rate=.1, xt=[0., 0.], iteration_number=100)
 visualize_fun(paraboloid, trajectory)
