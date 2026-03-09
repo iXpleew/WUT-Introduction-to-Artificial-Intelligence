@@ -40,7 +40,13 @@ def calculate_gradient_path(function: Callable, learning_rate: float, iteration_
     return np.array(gradient_history)
 
 def check_rate_influance(xt: list[float]):
-    pass    
+    pass
+
+def calculate_vector_values(trajectory: np.ndarray) -> list[float]:
+    values = []
+    for coordinates in trajectory:
+        values.append(paraboloid(coordinates))
+    return values
 
 def visualize_fun(obj_fun: Callable, trajectories: list[np.ndarray]): 
     min_x1, min_y1 = trajectories[0][-1]
@@ -55,10 +61,11 @@ def visualize_fun(obj_fun: Callable, trajectories: list[np.ndarray]):
     X1, X2 = np.meshgrid(x1, x2)
     Z = obj_fun([X1, X2])
 
-    layout = [["heatmap", "point_a"],
-              ["heatmap", "point_b"],
-              ["heatmap", "point_c"]]
-    fig, axes = plt.subplot_mosaic(layout, figsize=(12, 6))
+    layout = (("heatmap", "point_a"),
+              ("heatmap", "point_b"),
+              ("heatmap", "point_c"))
+    
+    fig, axes = plt.subplot_mosaic(layout, figsize=(12, 6)) #type: ignore
 
     plt.subplots_adjust(bottom=0.25)
     map = axes["heatmap"].pcolormesh(X1, X2, Z, cmap='viridis', shading='auto')
@@ -75,10 +82,10 @@ def visualize_fun(obj_fun: Callable, trajectories: list[np.ndarray]):
     set_scatters(min_x2, min_y2, trajectories[1])
     set_scatters(min_x3, min_y3, trajectories[2])
     values = []
-    for vector in trajectories[2]:
+    for vector in trajectories[0]:
         values.append(paraboloid(vector))
 
-    axes["point_c"].plot(range(len(trajectories[2])), values)  
+    axes["point_a"].plot(range(len(trajectories[0])), values)  
     axes["heatmap"].legend()
     plt.show()
 
