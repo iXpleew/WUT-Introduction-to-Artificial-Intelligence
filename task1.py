@@ -81,11 +81,15 @@ def visualize_fun(obj_fun: Callable, trajectories: list[np.ndarray]):
     set_scatters(min_x1, min_y1, trajectories[0])
     set_scatters(min_x2, min_y2, trajectories[1])
     set_scatters(min_x3, min_y3, trajectories[2])
-    values = []
-    for vector in trajectories[0]:
-        values.append(paraboloid(vector))
 
-    axes["point_a"].plot(range(len(trajectories[0])), values)  
+    a_values = calculate_vector_values(trajectories[0])
+    b_values = calculate_vector_values(trajectories[1])
+    c_values = calculate_vector_values(trajectories[2]
+                                       )
+    axes["point_a"].plot(range(len(a_values)), a_values)
+    axes["point_b"].plot(range(len(b_values)), b_values)
+    axes["point_c"].plot(range(len(c_values)), c_values)
+
     axes["heatmap"].legend()
     plt.show()
 
