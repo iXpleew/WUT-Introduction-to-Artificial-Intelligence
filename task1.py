@@ -19,7 +19,7 @@ def paraboloid(args: list[float]) -> float:
 
 def matyas(args: list[float]) -> float:
     x1, x2 = args[0], args[1]
-    return 0.0
+    return 0.26 * (x1**2 + x2**2) - 0.48 * x1 * x2
 
 def gradient_descent_formula(argument: float, learning_rate: float, vector_arg: float) -> float:
     new_xt = argument - learning_rate*vector_arg
@@ -78,11 +78,10 @@ def visualize_fun(obj_fun: Callable, trajectories: list[np.ndarray]):
         values.append(paraboloid(vector))
 
     ax2.plot(range(len(trajectories[2])), values)  
-    
     ax1.legend()
     plt.show()
 
-first_traj = calculate_gradient_path(paraboloid, 0.9, 2, [1., 1.])
+first_traj = calculate_gradient_path(paraboloid, 0.9, 20, [1., 1.])
 second_traj = calculate_gradient_path(paraboloid, 0.2, 100, [10., -4.])
 third_traj = calculate_gradient_path(paraboloid, 0.01, 2000, [6., -7.])
 visualize_fun(paraboloid, [first_traj, second_traj, third_traj])
