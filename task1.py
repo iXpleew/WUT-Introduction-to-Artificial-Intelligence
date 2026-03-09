@@ -3,6 +3,7 @@ import autograd.numpy as anp
 import numpy as np
 import autograd
 from typing import Callable
+import math
 # co zmienic:
 # - usunac suwak
 # - dodac argparse
@@ -34,10 +35,14 @@ def calculate_gradient_path(function: Callable, learning_rate: float, iteration_
         xt[0] = gradient_descent_formula(xt[0], learning_rate, vector_gradient[0])
         xt[1] = gradient_descent_formula(xt[1], learning_rate, vector_gradient[1])
         gradient_history.append([xt[0], xt[1]])
-        if i >= 999: 
+
+        low_gradient = math.sqrt(vector_gradient[0]**2 + vector_gradient[1]**2) < 0.001
+        if i >= 999 or low_gradient: 
             break
     return np.array(gradient_history)
-        
+
+def check_rate_influance(xt: list[float]):
+    pass    
 
 def visualize_fun(obj_fun: Callable, trajectories: list[np.ndarray]): 
     min_x1, min_y1 = trajectories[0][-1]
@@ -69,15 +74,15 @@ def visualize_fun(obj_fun: Callable, trajectories: list[np.ndarray]):
     set_scatters(min_x2, min_y2, trajectories[1])
     set_scatters(min_x3, min_y3, trajectories[2])
     values = []
-    for vector in trajectories[1]:
+    for vector in trajectories[2]:
         values.append(paraboloid(vector))
 
-    ax2.plot(range(len(trajectories[1])), values)  
+    ax2.plot(range(len(trajectories[2])), values)  
     
     ax1.legend()
     plt.show()
 
 first_traj = calculate_gradient_path(paraboloid, 0.9, 2, [1., 1.])
-second_traj = calculate_gradient_path(paraboloid, 0.2, 10, [10., -4.])
-third_traj = calculate_gradient_path(paraboloid, 0.01, 1000, [6., -7.])
+second_traj = calculate_gradient_path(paraboloid, 0.2, 100, [10., -4.])
+third_traj = calculate_gradient_path(paraboloid, 0.01, 2000, [6., -7.])
 visualize_fun(paraboloid, [first_traj, second_traj, third_traj])
