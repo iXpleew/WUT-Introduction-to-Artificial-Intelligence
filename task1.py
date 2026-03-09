@@ -5,9 +5,7 @@ import autograd
 from typing import Callable
 import math
 # co zmienic:
-# - usunac suwak
 # - dodac argparse
-# - dodac druga funkcje
 # - parametry skoku, liczbe iteracji
 # - wykres skoku i wniosek w pdf jaki ma wplyw na algorytm
 # - wykres punktow i jak sie zmianiaja 
@@ -57,18 +55,21 @@ def visualize_fun(obj_fun: Callable, trajectories: list[np.ndarray]):
     X1, X2 = np.meshgrid(x1, x2)
     Z = obj_fun([X1, X2])
 
-    fig, (ax1, ax2) = plt.subplots(1,2, figsize=(12, 6))
+    layout = [["heatmap", "point_a"],
+              ["heatmap", "point_b"],
+              ["heatmap", "point_c"]]
+    fig, axes = plt.subplot_mosaic(layout, figsize=(12, 6))
 
     plt.subplots_adjust(bottom=0.25)
-    map = ax1.pcolormesh(X1, X2, Z, cmap='viridis', shading='auto')
-    fig.colorbar(map, ax=ax1, label='Objective Function Value')
-    ax1.set_xlabel('x1')
-    ax1.set_ylabel('x2')
-    ax1.set_title('Objective Function Visualization')
+    map = axes["heatmap"].pcolormesh(X1, X2, Z, cmap='viridis', shading='auto')
+    fig.colorbar(map, ax=axes["heatmap"], label='Objective Function Value')
+    axes["heatmap"].set_xlabel('x1')
+    axes["heatmap"].set_ylabel('x2')
+    axes["heatmap"].set_title('Objective Function Visualization')
 
     def set_scatters(min, max, trajectory):
-        ax1.scatter(min, max, color="yellow")
-        ax1.plot(trajectory[:, 0], trajectory[:, 1], marker='o', color='red', alpha = 0.5)
+        axes["heatmap"].scatter(min, max, color="yellow")
+        axes["heatmap"].plot(trajectory[:, 0], trajectory[:, 1], marker='o', color='red', alpha = 0.5)
 
     set_scatters(min_x1, min_y1, trajectories[0])
     set_scatters(min_x2, min_y2, trajectories[1])
@@ -77,11 +78,11 @@ def visualize_fun(obj_fun: Callable, trajectories: list[np.ndarray]):
     for vector in trajectories[2]:
         values.append(paraboloid(vector))
 
-    ax2.plot(range(len(trajectories[2])), values)  
-    ax1.legend()
+    axes["point_c"].plot(range(len(trajectories[2])), values)  
+    axes["heatmap"].legend()
     plt.show()
 
-first_traj = calculate_gradient_path(paraboloid, 0.9, 20, [1., 1.])
+first_traj = calculate_gradient_path(paraboloid, 0.1, 20, [-8., 0.])
 second_traj = calculate_gradient_path(paraboloid, 0.2, 100, [10., -4.])
-third_traj = calculate_gradient_path(paraboloid, 0.01, 2000, [6., -7.])
+third_traj = calculate_gradient_path(paraboloid, 0.01, 200, [6., -7.])
 visualize_fun(paraboloid, [first_traj, second_traj, third_traj])
