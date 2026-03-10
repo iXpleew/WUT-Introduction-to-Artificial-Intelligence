@@ -5,7 +5,6 @@ import autograd
 from typing import Callable
 import math
 # co zmienic:
-# - dodac argparse
 # - parametry skoku, liczbe iteracji
 # - wykres skoku i wniosek w pdf jaki ma wplyw na algorytm
 # - wykres punktow i jak sie zmianiaja 
@@ -65,7 +64,7 @@ def visualize_fun(obj_fun: Callable, trajectories: list[np.ndarray]):
               ("heatmap", "point_b"),
               ("heatmap", "point_c"))
     
-    fig, axes = plt.subplot_mosaic(layout, figsize=(12, 6)) #type: ignore
+    fig, axes = plt.subplot_mosaic(layout, figsize=(12, 6),constrained_layout=True) #type: ignore
 
     plt.subplots_adjust(bottom=0.25)
     map = axes["heatmap"].pcolormesh(X1, X2, Z, cmap='viridis', shading='auto')
@@ -84,16 +83,18 @@ def visualize_fun(obj_fun: Callable, trajectories: list[np.ndarray]):
 
     a_values = calculate_vector_values(trajectories[0])
     b_values = calculate_vector_values(trajectories[1])
-    c_values = calculate_vector_values(trajectories[2]
-                                       )
+    c_values = calculate_vector_values(trajectories[2])
     axes["point_a"].plot(range(len(a_values)), a_values)
+    axes["point_a"].set_xlabel("First point")
     axes["point_b"].plot(range(len(b_values)), b_values)
+    axes["point_b"].set_xlabel("Second point")
     axes["point_c"].plot(range(len(c_values)), c_values)
+    axes["point_c"].set_xlabel("Third point")
 
     axes["heatmap"].legend()
     plt.show()
 
 first_traj = calculate_gradient_path(paraboloid, 0.1, 20, [-8., 0.])
-second_traj = calculate_gradient_path(paraboloid, 0.2, 100, [10., -4.])
-third_traj = calculate_gradient_path(paraboloid, 0.01, 200, [6., -7.])
+second_traj = calculate_gradient_path(paraboloid, 0.2, 10, [10., -4.])
+third_traj = calculate_gradient_path(paraboloid, 0.01, 20, [6., -7.])
 visualize_fun(paraboloid, [first_traj, second_traj, third_traj])
