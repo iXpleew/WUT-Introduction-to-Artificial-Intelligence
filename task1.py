@@ -5,13 +5,6 @@ import autograd
 from typing import Callable
 import math
 import random
-# co zmienic:
-# - parametry skoku, liczbe iteracji
-# - wykres skoku i wniosek w pdf jaki ma wplyw na algorytm
-# - wykres punktow i jak sie zmianiaja 
-# - zmienic calculate gradient path zeby zwracal liste list tego jak sie zmienia gradient
-# zeby wyswietlacv potem pokazywac na jednym wykresie 
- 
 
 def paraboloid(args: list[float]) -> float:
     x1, x2 = args[0], args[1]
@@ -32,8 +25,7 @@ def gradient_descent_formula(argument: float, learning_rate: float, vector_arg: 
     return new_xt
 
 
-def calculate_gradient_path(function: Callable, xt=None):
-    learning_rate = 0.3
+def calculate_gradient_path(function: Callable, xt=None, learning_rate=0.4):
     if xt is None:
         xt = [0.0, 0.0]
     function_gradient = autograd.grad(function) # type: ignore
@@ -54,10 +46,10 @@ def check_rate_influance(xt: list[float]):
     pass
 
 
-def calculate_vector_values(trajectory: np.ndarray) -> list[float]:
+def calculate_vector_values(trajectory: np.ndarray, function: Callable) -> list[float]:
     values = []
     for coordinates in trajectory:
-        values.append(paraboloid(coordinates))
+        values.append(function(coordinates))
     return values
 
 
@@ -74,7 +66,7 @@ def visualize_fun(obj_fun: Callable, trajectories: list[np.ndarray]):
     X1, X2 = np.meshgrid(x1, x2)
     Z = obj_fun([X1, X2])
 
-    fig, (ax1, ax2) = plt.subplots(1,2) #type: ignore
+    fig, (ax1, ax2) = plt.subplots(1,2, figsize=(12, 6)) #type: ignore
 
     plt.subplots_adjust(bottom=0.25)
     map = ax1.pcolormesh(X1, X2, Z, cmap='viridis', shading='auto')
@@ -91,18 +83,19 @@ def visualize_fun(obj_fun: Callable, trajectories: list[np.ndarray]):
     set_scatters(min_x2, min_y2, trajectories[1], "magenta")
     set_scatters(min_x3, min_y3, trajectories[2],"tomato")
 
-    a_values = calculate_vector_values(trajectories[0])
-    b_values = calculate_vector_values(trajectories[1])
-    c_values = calculate_vector_values(trajectories[2])
+    a_values = calculate_vector_values(trajectories[0], obj_fun)
+    b_values = calculate_vector_values(trajectories[1], obj_fun)
+    c_values = calculate_vector_values(trajectories[2], obj_fun)
     ax2.plot(range(len(a_values)), a_values, color="lime", label=f"{trajectories[0][0]}")
     ax2.plot(range(len(b_values)), b_values, color="magenta", label=f"{trajectories[1][0]}")
     ax2.plot(range(len(c_values)), c_values, color="tomato", label=f"{trajectories[2][0]}")
     ax2.set_xlabel("Number of iteration")
+    ax2.set_ylabel("Value")
     ax2.legend(title="Starting points")
     plt.show()
 
 
-first_traj = calculate_gradient_path(paraboloid, get_random_point())
-second_traj = calculate_gradient_path(paraboloid, get_random_point())
-third_traj = calculate_gradient_path(paraboloid, get_random_point())
-visualize_fun(paraboloid, [first_traj, second_traj, third_traj])
+first_traj = calculate_gradient_path(matyas, get_random_point())
+second_traj = calculate_gradient_path(matyas, get_random_point())
+third_traj = calculate_gradient_path(matyas, get_random_point())
+visualize_fun(matyas, [first_traj, second_traj, third_traj])
