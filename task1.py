@@ -33,7 +33,7 @@ def gradient_descent_formula(argument: float, learning_rate: float, vector_arg: 
 
 
 def calculate_gradient_path(function: Callable, xt=None):
-    learning_rate = 0.1
+    learning_rate = 0.3
     if xt is None:
         xt = [0.0, 0.0]
     function_gradient = autograd.grad(function) # type: ignore
@@ -44,7 +44,7 @@ def calculate_gradient_path(function: Callable, xt=None):
         xt[1] = gradient_descent_formula(xt[1], learning_rate, vector_gradient[1])
         gradient_history.append([xt[0], xt[1]])
 
-        low_gradient = math.sqrt(vector_gradient[0]**2 + vector_gradient[1]**2) < 0.001
+        low_gradient = math.sqrt(vector_gradient[0]**2 + vector_gradient[1]**2) < 0.01
         if low_gradient: 
             break
     return np.array(gradient_history)
@@ -94,9 +94,11 @@ def visualize_fun(obj_fun: Callable, trajectories: list[np.ndarray]):
     a_values = calculate_vector_values(trajectories[0])
     b_values = calculate_vector_values(trajectories[1])
     c_values = calculate_vector_values(trajectories[2])
-    ax2.plot(range(len(a_values)), a_values, color="lime")
-    ax2.plot(range(len(b_values)), b_values, color="magenta")
-    ax2.plot(range(len(c_values)), c_values, color="tomato")
+    ax2.plot(range(len(a_values)), a_values, color="lime", label=f"{trajectories[0][0]}")
+    ax2.plot(range(len(b_values)), b_values, color="magenta", label=f"{trajectories[1][0]}")
+    ax2.plot(range(len(c_values)), c_values, color="tomato", label=f"{trajectories[2][0]}")
+    ax2.set_xlabel("Number of iteration")
+    ax2.legend(title="Starting points")
     plt.show()
 
 
