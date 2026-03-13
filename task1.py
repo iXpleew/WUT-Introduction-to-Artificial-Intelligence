@@ -32,20 +32,20 @@ def gradient_descent_formula(argument: float, learning_rate: float, vector_arg: 
     return new_xt
 
 
-def calculate_gradient_path(function: Callable, iteration_number: int, xt=None):
+def calculate_gradient_path(function: Callable, xt=None):
     learning_rate = 0.1
     if xt is None:
         xt = [0.0, 0.0]
     function_gradient = autograd.grad(function) # type: ignore
     gradient_history = [[xt[0], xt[1]]]
-    for i in range(iteration_number):
+    for i in range(999):
         vector_gradient = function_gradient(anp.array(xt))
         xt[0] = gradient_descent_formula(xt[0], learning_rate, vector_gradient[0])
         xt[1] = gradient_descent_formula(xt[1], learning_rate, vector_gradient[1])
         gradient_history.append([xt[0], xt[1]])
 
         low_gradient = math.sqrt(vector_gradient[0]**2 + vector_gradient[1]**2) < 0.001
-        if i >= 999 or low_gradient: 
+        if low_gradient: 
             break
     return np.array(gradient_history)
 
@@ -100,7 +100,7 @@ def visualize_fun(obj_fun: Callable, trajectories: list[np.ndarray]):
     plt.show()
 
 
-first_traj = calculate_gradient_path(paraboloid, 20, get_random_point())
-second_traj = calculate_gradient_path(paraboloid, 10, get_random_point())
-third_traj = calculate_gradient_path(paraboloid, 20, get_random_point())
+first_traj = calculate_gradient_path(paraboloid, get_random_point())
+second_traj = calculate_gradient_path(paraboloid, get_random_point())
+third_traj = calculate_gradient_path(paraboloid, get_random_point())
 visualize_fun(paraboloid, [first_traj, second_traj, third_traj])
