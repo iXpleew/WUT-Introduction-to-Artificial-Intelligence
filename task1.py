@@ -4,10 +4,13 @@ import numpy as np
 import autograd
 from typing import Callable
 import math
+import random
 # co zmienic:
 # - parametry skoku, liczbe iteracji
 # - wykres skoku i wniosek w pdf jaki ma wplyw na algorytm
 # - wykres punktow i jak sie zmianiaja 
+# - zmienic calculate gradient path zeby zwracal liste list tego jak sie zmienia gradient
+# zeby wyswietlacv potem pokazywac na jednym wykresie 
  
 
 def paraboloid(args: list[float]) -> float:
@@ -18,11 +21,14 @@ def matyas(args: list[float]) -> float:
     x1, x2 = args[0], args[1]
     return 0.26 * (x1**2 + x2**2) - 0.48 * x1 * x2
 
+def get_random_point():
+    return [random.randrange(-20, 20)/2, random.randrange(-20,20)/2]
 def gradient_descent_formula(argument: float, learning_rate: float, vector_arg: float) -> float:
     new_xt = argument - learning_rate*vector_arg
     return new_xt
 
-def calculate_gradient_path(function: Callable, learning_rate: float, iteration_number: int, xt=None): 
+def calculate_gradient_path(function: Callable, iteration_number: int, xt=None):
+    learning_rate = 0.1
     if xt is None:
         xt = [0.0, 0.0]
     function_gradient = autograd.grad(function) # type: ignore
@@ -94,7 +100,7 @@ def visualize_fun(obj_fun: Callable, trajectories: list[np.ndarray]):
     axes["heatmap"].legend()
     plt.show()
 
-first_traj = calculate_gradient_path(paraboloid, 0.1, 20, [-8., 0.])
-second_traj = calculate_gradient_path(paraboloid, 0.2, 10, [10., -4.])
-third_traj = calculate_gradient_path(paraboloid, 0.01, 20, [6., -7.])
+first_traj = calculate_gradient_path(paraboloid, 20, [get_random_point()])
+second_traj = calculate_gradient_path(paraboloid, 10, [get_random_point()])
+third_traj = calculate_gradient_path(paraboloid, 20, [get_random_point()])
 visualize_fun(paraboloid, [first_traj, second_traj, third_traj])
