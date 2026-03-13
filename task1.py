@@ -83,20 +83,20 @@ def visualize_fun(obj_fun: Callable, trajectories: list[np.ndarray]):
     ax1.set_ylabel('x2')
     ax1.set_title('Objective Function Visualization')
 
-    def set_scatters(min, max, trajectory):
+    def set_scatters(min, max, trajectory, colour):
         ax1.scatter(min, max, color="yellow")
-        ax1.plot(trajectory[:, 0], trajectory[:, 1], marker='o', color='red', alpha = 0.5)
+        ax1.plot(trajectory[:, 0], trajectory[:, 1], marker='o', color=colour, alpha = 0.5)
 
-    set_scatters(min_x1, min_y1, trajectories[0])
-    set_scatters(min_x2, min_y2, trajectories[1])
-    set_scatters(min_x3, min_y3, trajectories[2])
+    set_scatters(min_x1, min_y1, trajectories[0], "lime")
+    set_scatters(min_x2, min_y2, trajectories[1], "magenta")
+    set_scatters(min_x3, min_y3, trajectories[2],"tomato")
 
     a_values = calculate_vector_values(trajectories[0])
     b_values = calculate_vector_values(trajectories[1])
     c_values = calculate_vector_values(trajectories[2])
-    ax2.plot(range(len(a_values)), a_values)
-    ax2.plot(range(len(b_values)), b_values)
-    ax2.plot(range(len(c_values)), c_values)
+    ax2.plot(range(len(a_values)), a_values, color="lime")
+    ax2.plot(range(len(b_values)), b_values, color="magenta")
+    ax2.plot(range(len(c_values)), c_values, color="tomato")
     plt.show()
 
 
