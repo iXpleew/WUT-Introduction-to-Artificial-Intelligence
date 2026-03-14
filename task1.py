@@ -25,10 +25,10 @@ def gradient_descent_formula(argument: float, learning_rate: float, vector_arg: 
     return new_xt
 
 
-def calculate_gradient_path(function: Callable, xt=None, learning_rate=0.4):
+def calculate_gradient_path(function: Callable, xt=None, learning_rate=0.07):
     if xt is None:
         xt = [0.0, 0.0]
-    function_gradient = autograd.grad(function) # type: ignore
+    function_gradient = autograd.grad(function)
     gradient_history = [[xt[0], xt[1]]]
     for i in range(999):
         vector_gradient = function_gradient(anp.array(xt))
@@ -40,10 +40,6 @@ def calculate_gradient_path(function: Callable, xt=None, learning_rate=0.4):
         if low_gradient: 
             break
     return np.array(gradient_history)
-
-
-def check_rate_influance(xt: list[float]):
-    pass
 
 
 def calculate_vector_values(trajectory: np.ndarray, function: Callable) -> list[float]:
@@ -66,7 +62,7 @@ def visualize_fun(obj_fun: Callable, trajectories: list[np.ndarray]):
     X1, X2 = np.meshgrid(x1, x2)
     Z = obj_fun([X1, X2])
 
-    fig, (ax1, ax2) = plt.subplots(1,2, figsize=(12, 6)) #type: ignore
+    fig, (ax1, ax2) = plt.subplots(1,2, figsize=(12, 6)) 
 
     plt.subplots_adjust(bottom=0.25)
     map = ax1.pcolormesh(X1, X2, Z, cmap='viridis', shading='auto')
@@ -95,7 +91,7 @@ def visualize_fun(obj_fun: Callable, trajectories: list[np.ndarray]):
     plt.show()
 
 
-first_traj = calculate_gradient_path(matyas, get_random_point())
-second_traj = calculate_gradient_path(matyas, get_random_point())
-third_traj = calculate_gradient_path(matyas, get_random_point())
+first_traj = calculate_gradient_path(matyas, [8.5, -3.5])
+second_traj = calculate_gradient_path(matyas, [0, -4.5])
+third_traj = calculate_gradient_path(matyas, [-8, 6.5])
 visualize_fun(matyas, [first_traj, second_traj, third_traj])
