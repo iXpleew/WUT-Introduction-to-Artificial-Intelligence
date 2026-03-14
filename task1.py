@@ -90,8 +90,8 @@ def visualize_fun(obj_fun: Callable, trajectories: list[np.ndarray]):
     ax2.legend(title="Starting points")
     plt.show()
 
-
-first_traj = calculate_gradient_path(matyas, [8.5, -3.5])
-second_traj = calculate_gradient_path(matyas, [0, -4.5])
-third_traj = calculate_gradient_path(matyas, [-8, 6.5])
-visualize_fun(matyas, [first_traj, second_traj, third_traj])
+if __name__== "__main__":
+    first_traj = calculate_gradient_path(paraboloid, get_random_point())
+    second_traj = calculate_gradient_path(paraboloid, get_random_point())
+    third_traj = calculate_gradient_path(paraboloid, get_random_point())
+    visualize_fun(paraboloid, [first_traj, second_traj, third_traj])
