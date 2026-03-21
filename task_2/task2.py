@@ -47,8 +47,9 @@ def genetic_selection(shuffled_lists: list[list[list[int]]]) -> list[list[list[i
             survivors.append(shuffled_lists[i + mid_number])
     return survivors
 
-def create_offspring(first_parent: list[list[int]], second_parent: list[list[int]]):
-    off_spring = []
+
+def create_child(first_parent: list[list[int]], second_parent: list[list[int]]):
+    child = []
     start = random.randint(0, len(first_parent) - 1)
     finish = random.randint(start, len(first_parent))
     first_sub_path = first_parent[start:finish]
@@ -56,11 +57,26 @@ def create_offspring(first_parent: list[list[int]], second_parent: list[list[int
 
     for i in range(len(first_parent)):
         if start <= i < finish:
-            off_spring.append(first_sub_path.pop(0))
+            child.append(first_sub_path.pop(0))
         else:
-            off_spring.append(remaining_second.pop(0))
-    return off_spring
+            child.append(remaining_second.pop(0))
+    return child
 
+
+def add_crossovers(survivors: list[list[list[int]]]):
+    children = []
+    mid_number = len(survivors) // 2
+
+    for i in range(len(survivors)):
+        first_parent = survivors[i]
+        second_parent = survivors[i + mid_number]
+        
+        for _ in range(2):
+            child = create_child(first_parent, second_parent)
+            children.append(child)
+            child = create_child(second_parent, first_parent)
+            children.append(child)
+    return children
 def show_points_on_plane(points:list[list[int]], generation_number: int):
     x_coordinates = [x[0] for x in points]
     y_coordinates = [x[1] for x in points]
