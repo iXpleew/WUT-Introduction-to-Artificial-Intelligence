@@ -73,11 +73,11 @@ def create_child(first_parent: list[list[int]], second_parent: list[list[int]]):
     return child
 
 
-def add_crossovers(survivors: list[list[list[int]]]):
+def add_crossovers(survivors: list[list[list[int]]]) -> list[list[list[int]]]:
     children = []
     mid_number = len(survivors) // 2
 
-    for i in range(len(survivors)):
+    for i in range(mid_number):
         first_parent = survivors[i]
         second_parent = survivors[i + mid_number]
         
@@ -89,7 +89,7 @@ def add_crossovers(survivors: list[list[list[int]]]):
     return children
 
 
-def add_mutations(new_generation: list[list[list[int]]]):
+def add_mutations(new_generation: list[list[list[int]]]) -> list[list[list[int]]]:
     mutated_generation = []
     for path in new_generation:
         if random.randint(1, 100) < 10:
@@ -112,12 +112,17 @@ def show_points_on_plane(points:list[list[int]], generation_number: int):
     plt.show()
 
 
-def optimize_path(points:list[list[int]], generation_number = 1):
-    random_paths = shuffle_list(points, 1000)
-
+def optimize_path(points:list[list[int]]):
+    survivors = shuffle_list(points, 100)
     for _ in range(100):
+        survivors = genetic_selection(survivors)
+        survivors = add_crossovers(survivors)
+        survivors = add_mutations(survivors)
+
+    the_best = return_shortest_path(survivors)
+    show_points_on_plane(the_best, 1)
 
 
 if __name__ == "__main__":
     list_points = [[-14, 8], [-4, 17], [13, -10], [-11, -12], [-4, 13], [-20, -12], [-4, 9], [-12, 18], [-4, -2], [-16, 11]]
-    show_points_on_plane(list_points, 1)
+    optimize_path(list_points)
