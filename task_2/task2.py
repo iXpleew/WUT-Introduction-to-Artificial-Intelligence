@@ -47,11 +47,13 @@ def genetic_selection(shuffled_lists: list[list[list[int]]]) -> list[list[list[i
             survivors.append(shuffled_lists[i + mid_number])
     return survivors
 
+def create_offspring(first_parent: list[list[int]], second_parent: list[list[int]]):
+    pass
 
 def show_points_on_plane(points:list[list[int]], generation_number: int):
     x_coordinates = [x[0] for x in points]
     y_coordinates = [x[1] for x in points]
-    distance = calculate_entire_distance(points)
+    distance = calculate_total_distance(points)
     x_coordinates.append(x_coordinates[0])
     y_coordinates.append(y_coordinates[0])
     plt.scatter(x_coordinates, y_coordinates)
