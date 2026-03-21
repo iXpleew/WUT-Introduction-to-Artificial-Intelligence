@@ -14,6 +14,15 @@ def calculate_distance(point_a: list[int], point_b: list[int]) -> float:
     return distance
 
 
+def calculate_entire_distance(points:list[list[int]]) -> float:
+    total_distance = 0
+    for i in range(len(points)):
+        first_point = points[i-1]
+        second_point = points[i]
+        total_distance += calculate_distance(first_point, second_point)
+    return total_distance
+
+
 def shuffle_list(points:list[list[int]], shuffle_number: int) -> list[list[list[int]]]:
     combination_list = []
     for i in range(shuffle_number):
@@ -22,8 +31,6 @@ def shuffle_list(points:list[list[int]], shuffle_number: int) -> list[list[list[
 
 
 def show_points_on_plane(points:list[list[int]]):
-    
-    random.shuffle(points)
     x_coordinates = [x[0] for x in points]
     y_coordinates = [x[1] for x in points]
 
