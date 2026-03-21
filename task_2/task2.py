@@ -14,7 +14,7 @@ def calculate_distance(point_a: list[int], point_b: list[int]) -> float:
     return distance
 
 
-def calculate_entire_distance(points:list[list[int]]) -> float:
+def calculate_total_distance(points:list[list[int]]) -> float:
     total_distance = 0
     for i in range(len(points)):
         first_point = points[i-1]
@@ -34,9 +34,18 @@ def shuffle_list(points:list[list[int]], shuffle_number: int) -> list[list[list[
     return combination_list
 
 
-def genetic_selection(shuffled_list: list[list[list[int]]]) -> list[list[list[int]]]:
-    comprarison_number = len(shuffled_list) // 2
-    for i in range(comprarison_number):
+def genetic_selection(shuffled_lists: list[list[list[int]]]) -> list[list[list[int]]]:
+    random.shuffle(shuffled_lists)
+    mid_number = len(shuffled_lists) // 2
+    survivors = []
+    for i in range(mid_number):
+        first_lenght = calculate_total_distance(shuffled_lists[i])
+        second_lenght = calculate_total_distance(shuffled_lists[i + mid_number])
+        if first_lenght > second_lenght:
+            survivors.append(shuffled_lists[i])
+        else:
+            survivors.append(shuffled_lists[i + mid_number])
+    return survivors
 
 
 def show_points_on_plane(points:list[list[int]], generation_number: int):
