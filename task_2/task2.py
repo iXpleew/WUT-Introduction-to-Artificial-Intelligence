@@ -4,7 +4,7 @@ import math
 
 def generate_random_points(number_of_points: int) -> list[list[int]]:
     points_list = []
-    for i in range(number_of_points):
+    for _ in range(number_of_points):
         points_list.append([random.randrange(-20, 20), random.randrange(-20,20)])
     return points_list
 
@@ -77,6 +77,19 @@ def add_crossovers(survivors: list[list[list[int]]]):
             child = create_child(second_parent, first_parent)
             children.append(child)
     return children
+
+
+def add_mutations(new_generation: list[list[list[int]]]):
+    mutated_generation = []
+    for path in new_generation:
+        if random.randint(1, 100) < 10:
+            point_a = random.randint(1, len(path) - 1)
+            point_b = random.randint(1, len(path) - 1)
+            path[point_a], path[point_b] = path[point_b], path[point_a]
+        mutated_generation.append(path)
+    return mutated_generation
+
+
 def show_points_on_plane(points:list[list[int]], generation_number: int):
     x_coordinates = [x[0] for x in points]
     y_coordinates = [x[1] for x in points]
