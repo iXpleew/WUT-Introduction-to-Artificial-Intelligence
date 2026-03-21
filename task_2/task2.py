@@ -9,9 +9,9 @@ def generate_random_points(number_of_points: int) -> list[list[int]]:
     return points_list
 
 
-def calculate_distance(point_a: list[int], point_b: list[int]) -> int:
-    distamce = math.sqrt((point_b[0]-point_a[0])**2 + (point_b[1]-point_a[1])**2)
-    return 0
+def calculate_distance(point_a: list[int], point_b: list[int]) -> float:
+    distance = math.sqrt((point_b[0]-point_a[0])**2 + (point_b[1]-point_a[1])**2)
+    return distance
 
 
 def shuffle_list(points:list[list[int]], shuffle_number: int) -> list[list[list[int]]]:
