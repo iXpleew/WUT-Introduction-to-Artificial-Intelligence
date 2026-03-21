@@ -34,5 +34,6 @@ def show_points_on_plane(points:list[list[int]]):
     plt.plot(x_coordinates, y_coordinates)
     plt.show()
 
-list_points = [[-14, 8], [-4, 17], [13, -10], [-11, -12], [-4, 13], [-20, -12], [-4, 9], [-12, 18], [-4, -2], [-16, 11]]
-show_points_on_plane(list_points)
+if __name__ == "__main__":
+    list_points = [[-14, 8], [-4, 17], [13, -10], [-11, -12], [-4, 13], [-20, -12], [-4, 9], [-12, 18], [-4, -2], [-16, 11]]
+    show_points_on_plane(list_points)
