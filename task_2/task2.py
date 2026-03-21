@@ -33,12 +33,12 @@ def shuffle_list(points:list[list[int]], shuffle_number: int) -> list[list[list[
 def show_points_on_plane(points:list[list[int]]):
     x_coordinates = [x[0] for x in points]
     y_coordinates = [x[1] for x in points]
-
-    # for connecting all points
+    distance = calculate_entire_distance(points)
     x_coordinates.append(x_coordinates[0])
     y_coordinates.append(y_coordinates[0])
     plt.scatter(x_coordinates, y_coordinates)
     plt.plot(x_coordinates, y_coordinates)
+    plt.legend([f"Total distance: {distance:.2f}"])
     plt.show()
 
 if __name__ == "__main__":
