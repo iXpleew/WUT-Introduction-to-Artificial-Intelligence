@@ -30,7 +30,7 @@ def shuffle_list(points:list[list[int]], shuffle_number: int) -> list[list[list[
     return combination_list
 
 
-def show_points_on_plane(points:list[list[int]]):
+def show_points_on_plane(points:list[list[int]], generation_number: int):
     x_coordinates = [x[0] for x in points]
     y_coordinates = [x[1] for x in points]
     distance = calculate_entire_distance(points)
@@ -38,9 +38,9 @@ def show_points_on_plane(points:list[list[int]]):
     y_coordinates.append(y_coordinates[0])
     plt.scatter(x_coordinates, y_coordinates)
     plt.plot(x_coordinates, y_coordinates)
-    plt.legend([f"Total distance: {distance:.2f}"])
+    plt.legend([f"Total distance: {distance:.2f}", f"Generation: {generation_number}"])
     plt.show()
 
 if __name__ == "__main__":
     list_points = [[-14, 8], [-4, 17], [13, -10], [-11, -12], [-4, 13], [-20, -12], [-4, 9], [-12, 18], [-4, -2], [-16, 11]]
-    show_points_on_plane(list_points)
+    show_points_on_plane(list_points, 1)
