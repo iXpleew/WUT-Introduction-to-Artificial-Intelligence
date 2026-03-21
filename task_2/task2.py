@@ -51,7 +51,7 @@ def genetic_selection(shuffled_lists: list[list[list[int]]]) -> list[list[list[i
     for i in range(mid_number):
         first_lenght = calculate_total_distance(shuffled_lists[i])
         second_lenght = calculate_total_distance(shuffled_lists[i + mid_number])
-        if first_lenght > second_lenght:
+        if first_lenght < second_lenght:
             survivors.append(shuffled_lists[i])
         else:
             survivors.append(shuffled_lists[i + mid_number])
@@ -114,7 +114,7 @@ def show_points_on_plane(points:list[list[int]], generation_number: int):
 
 def optimize_path(points:list[list[int]]):
     survivors = shuffle_list(points, 100)
-    for _ in range(100):
+    for _ in range(1000):
         survivors = genetic_selection(survivors)
         survivors = add_crossovers(survivors)
         survivors = add_mutations(survivors)
@@ -124,5 +124,5 @@ def optimize_path(points:list[list[int]]):
 
 
 if __name__ == "__main__":
-    list_points = [[-14, 8], [-4, 17], [13, -10], [-11, -12], [-4, 13], [-20, -12], [-4, 9], [-12, 18], [-4, -2], [-16, 11]]
+    list_points = [[-14, 8], [-4, 17], [13, -10], [-11, -12], [-4, 13], [-20, -12], [-4, 9], [-12, 18], [-4, -2], [-16, 11], [-3, 20], [-19, 19], [5, 0], [0, 13], [-9, -18]]
     optimize_path(list_points)
