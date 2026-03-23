@@ -62,16 +62,12 @@ def tournament_selection(shuffled_lists: list[list[list[int]]]) -> list[list[lis
 # change to single point
 def create_child(first_parent: list[list[int]], second_parent: list[list[int]]):
     child = []
-    start = random.randint(1, len(first_parent) - 1)
-    finish = random.randint(start, len(first_parent))
-    first_sub_path = first_parent[start:finish]
-    remaining_second = [point for point in second_parent if point not in first_sub_path]
+    cross_point = random.randint(1, len(first_parent))
 
-    for i in range(len(first_parent)):
-        if start <= i < finish:
-            child.append(first_sub_path.pop(0))
-        else:
-            child.append(remaining_second.pop(0))
+    first_parent_part = first_parent[:cross_point]
+    second_parent_part = [point for point in second_parent if point not in first_parent_part]
+    child = first_parent_part + second_parent_part
+
     return child
 
 
