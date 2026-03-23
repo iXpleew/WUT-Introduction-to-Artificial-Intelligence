@@ -25,11 +25,12 @@ def calculate_total_distance(points:list[list[int]]) -> float:
 
 def return_shortest_path(paths: list[list[list[int]]]) -> list[list[int]]:
     shortest_path = paths[0]
+    shortest_path_distance = calculate_total_distance(shortest_path)
     for path in paths:
         path_distance = calculate_total_distance(path)
-        shortest_path_distance = calculate_total_distance(shortest_path)
         if path_distance < shortest_path_distance:
             shortest_path = path
+            shortest_path_distance = calculate_total_distance(shortest_path)
     return shortest_path
 
 
@@ -44,7 +45,7 @@ def shuffle_list(points:list[list[int]], shuffle_number: int) -> list[list[list[
     return combination_list
 
 
-def genetic_selection(shuffled_lists: list[list[list[int]]]) -> list[list[list[int]]]:
+def tournament_selection(shuffled_lists: list[list[list[int]]]) -> list[list[list[int]]]:
     random.shuffle(shuffled_lists)
     mid_number = len(shuffled_lists) // 2
     survivors = []
@@ -60,7 +61,7 @@ def genetic_selection(shuffled_lists: list[list[list[int]]]) -> list[list[list[i
 
 def create_child(first_parent: list[list[int]], second_parent: list[list[int]]):
     child = []
-    start = random.randint(0, len(first_parent) - 1)
+    start = random.randint(1, len(first_parent) - 1)
     finish = random.randint(start, len(first_parent))
     first_sub_path = first_parent[start:finish]
     remaining_second = [point for point in second_parent if point not in first_sub_path]
@@ -114,8 +115,8 @@ def show_points_on_plane(points:list[list[int]], generation_number: int):
 
 def optimize_path(points:list[list[int]]):
     survivors = shuffle_list(points, 100)
-    for _ in range(1000):
-        survivors = genetic_selection(survivors)
+    for _ in range(100):
+        survivors = tournament_selection(survivors)
         survivors = add_crossovers(survivors)
         survivors = add_mutations(survivors)
 
@@ -124,5 +125,5 @@ def optimize_path(points:list[list[int]]):
 
 
 if __name__ == "__main__":
-    list_points = [[-14, 8], [-4, 17], [13, -10], [-11, -12], [-4, 13], [-20, -12], [-4, 9], [-12, 18], [-4, -2], [-16, 11], [-3, 20], [-19, 19], [5, 0], [0, 13], [-9, -18]]
+    list_points = [[-14, 8], [20, 17], [13, -10], [-11, -12], [-4, 13], [-20, -12], [-4, 9], [-12, 18], [-4, -2], [-16, 11], [-3, 20], [-19, 19], [5, 0], [0, 13], [-9, -18]]
     optimize_path(list_points)
