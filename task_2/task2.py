@@ -44,7 +44,14 @@ def shuffle_list(points:list[list[int]], shuffle_number: int) -> list[list[list[
         combination_list.append(combination)
     return combination_list
 
-# add rullette selection to this 
+
+def roullete_selection(shuffled_list: list[list[list[int]]]) -> list[list[list[int]]]:
+    # add fitness
+    # calculate prob
+    #take half of them 
+    #create child
+    return shuffled_list
+
 def tournament_selection(shuffled_lists: list[list[list[int]]]) -> list[list[list[int]]]:
     random.shuffle(shuffled_lists)
     mid_number = len(shuffled_lists) // 2
@@ -59,7 +66,6 @@ def tournament_selection(shuffled_lists: list[list[list[int]]]) -> list[list[lis
     return survivors
 
 
-# change to single point
 def create_child(first_parent: list[list[int]], second_parent: list[list[int]]):
     child = []
     cross_point = random.randint(1, len(first_parent))
@@ -112,13 +118,15 @@ def show_points_on_plane(points:list[list[int]], generation_number: int):
 
 def optimize_path(points:list[list[int]]):
     survivors = shuffle_list(points, 100)
-    for _ in range(100):
+    counter = 0
+    for _ in range(10):
         survivors = tournament_selection(survivors)
         survivors = add_crossovers(survivors)
         survivors = add_mutations(survivors)
+        counter += 1
 
     the_best = return_shortest_path(survivors)
-    show_points_on_plane(the_best, 1)
+    show_points_on_plane(the_best, counter)
 
 
 if __name__ == "__main__":
