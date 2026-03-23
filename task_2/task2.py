@@ -44,7 +44,7 @@ def shuffle_list(points:list[list[int]], shuffle_number: int) -> list[list[list[
         combination_list.append(combination)
     return combination_list
 
-
+# add rullette selection to this 
 def tournament_selection(shuffled_lists: list[list[list[int]]]) -> list[list[list[int]]]:
     random.shuffle(shuffled_lists)
     mid_number = len(shuffled_lists) // 2
@@ -59,6 +59,7 @@ def tournament_selection(shuffled_lists: list[list[list[int]]]) -> list[list[lis
     return survivors
 
 
+# change to single point
 def create_child(first_parent: list[list[int]], second_parent: list[list[int]]):
     child = []
     start = random.randint(1, len(first_parent) - 1)
