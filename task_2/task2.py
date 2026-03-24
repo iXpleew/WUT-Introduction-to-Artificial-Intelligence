@@ -57,11 +57,9 @@ def select_random_path(shuffled_list: list[list[list[int]]]) -> list[list[int]]:
     return shuffled_list[-1]
 
 def roullete_selection(shuffled_list: list[list[list[int]]]) -> list[list[list[int]]]:
-    # add fitness
-    # calculate prob
-    #take half of them 
-    #create child
-    
+    survivors = []
+    for i in range(50):
+        survivors.append(select_random_path(shuffled_list))
     return shuffled_list
 
 def tournament_selection(shuffled_lists: list[list[list[int]]]) -> list[list[list[int]]]:
