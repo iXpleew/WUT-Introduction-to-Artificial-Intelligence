@@ -45,11 +45,23 @@ def shuffle_list(points:list[list[int]], shuffle_number: int) -> list[list[list[
     return combination_list
 
 
+def select_random_path(shuffled_list: list[list[list[int]]]) -> list[list[int]]:
+    roullete_maximum = sum([(1/calculate_total_distance(x)) for x in shuffled_list])
+    winner = random.uniform(0, roullete_maximum)
+
+    current_fitness = 0
+    for parent in shuffled_list:
+        if current_fitness >= winner:
+            return parent
+        current_fitness += 1/calculate_total_distance(parent)
+    return shuffled_list[-1]
+
 def roullete_selection(shuffled_list: list[list[list[int]]]) -> list[list[list[int]]]:
     # add fitness
     # calculate prob
     #take half of them 
     #create child
+    
     return shuffled_list
 
 def tournament_selection(shuffled_lists: list[list[list[int]]]) -> list[list[list[int]]]:
