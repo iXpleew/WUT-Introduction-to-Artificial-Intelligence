@@ -45,22 +45,24 @@ def shuffle_list(points:list[list[int]], shuffle_number: int) -> list[list[list[
     return combination_list
 
 
-def select_random_path(shuffled_list: list[list[list[int]]]) -> list[list[int]]:
-    roullete_maximum = sum([(1/calculate_total_distance(x)) for x in shuffled_list])
-    winner = random.uniform(0, roullete_maximum)
+def select_random_path(shuffled_list: list[list[list[int]]], max_value: float) -> list[list[int]]:
+    winner = random.uniform(0, max_value)
 
     current_fitness = 0
     for parent in shuffled_list:
+        current_fitness += 1/calculate_total_distance(parent)
         if current_fitness >= winner:
             return parent
-        current_fitness += 1/calculate_total_distance(parent)
     return shuffled_list[-1]
+
 
 def roullete_selection(shuffled_list: list[list[list[int]]]) -> list[list[list[int]]]:
     survivors = []
+    roullete_maximum = sum([(1/calculate_total_distance(x)) for x in shuffled_list])
     for i in range(50):
-        survivors.append(select_random_path(shuffled_list))
-    return shuffled_list
+        survivors.append(select_random_path(shuffled_list, roullete_maximum))
+    return survivors
+
 
 def tournament_selection(shuffled_lists: list[list[list[int]]]) -> list[list[list[int]]]:
     random.shuffle(shuffled_lists)
@@ -78,7 +80,7 @@ def tournament_selection(shuffled_lists: list[list[list[int]]]) -> list[list[lis
 
 def create_child(first_parent: list[list[int]], second_parent: list[list[int]]):
     child = []
-    cross_point = random.randint(1, len(first_parent))
+    cross_point = random.randint(1, len(first_parent) - 1)
 
     first_parent_part = first_parent[:cross_point]
     second_parent_part = [point for point in second_parent if point not in first_parent_part]
@@ -129,8 +131,8 @@ def show_points_on_plane(points:list[list[int]], generation_number: int):
 def optimize_path(points:list[list[int]]):
     survivors = shuffle_list(points, 100)
     counter = 0
-    for _ in range(10):
-        survivors = tournament_selection(survivors)
+    for _ in range(100):
+        survivors = roullete_selection(survivors)
         survivors = add_crossovers(survivors)
         survivors = add_mutations(survivors)
         counter += 1
