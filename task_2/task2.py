@@ -45,26 +45,27 @@ def shuffle_list(points:list[list[int]], shuffle_number: int) -> list[list[list[
     return combination_list
 
 
-def select_random_path(shuffled_list: list[list[list[int]]], max_value: float) -> list[list[int]]:
+def calculate_distribution(path: list[list[int]], sigma: float) -> float:
+    path_lenght = calculate_total_distance(path)
+    return math.exp(-path_lenght/sigma)
+
+
+def select_random_path(shuffled_list: list[list[list[int]]], max_value: float, sigma: float) -> list[list[int]]:
     winner = random.uniform(0, max_value)
 
     current_fitness = 0
     for parent in shuffled_list:
-        current_fitness += 1/calculate_total_distance(parent)
+        current_fitness += calculate_distribution(parent, sigma)
         if current_fitness >= winner:
             return parent
     return shuffled_list[-1]
 
 
-def calculate_distribution(path_lenght: float, sigma: float) -> float:
-    return math.exp(sigma/path_lenght)
-
-
 def roullete_selection(shuffled_list: list[list[list[int]]], sigma: float, population_size: int) -> list[list[list[int]]]:
     survivors = []
-    roullete_maximum = sum([calculate_distribution(calculate_total_distance(x), sigma) for x in shuffled_list])
+    roullete_maximum = sum([calculate_distribution(x, sigma) for x in shuffled_list])
     for i in range(population_size//2):
-        survivors.append(select_random_path(shuffled_list, roullete_maximum))
+        survivors.append(select_random_path(shuffled_list, roullete_maximum, sigma))
     return survivors
 
 
@@ -136,7 +137,7 @@ def optimize_path(points:list[list[int]], population: int):
     survivors = shuffle_list(points, population)
     counter = 0
     for _ in range(100):
-        survivors = roullete_selection(survivors, 1.2, population_size=population)
+        survivors = roullete_selection(survivors, 12, population_size=population)
         survivors = add_crossovers(survivors)
         survivors = add_mutations(survivors)
         counter += 1
