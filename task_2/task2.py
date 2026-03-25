@@ -25,11 +25,12 @@ def calculate_total_distance(points:list[list[int]]) -> float:
 
 def return_shortest_path(paths: list[list[list[int]]]) -> list[list[int]]:
     shortest_path = paths[0]
+    shortest_path_distance = calculate_total_distance(shortest_path)
     for path in paths:
         path_distance = calculate_total_distance(path)
-        shortest_path_distance = calculate_total_distance(shortest_path)
         if path_distance < shortest_path_distance:
             shortest_path = path
+            shortest_path_distance = calculate_total_distance(shortest_path)
     return shortest_path
 
 
@@ -44,7 +45,31 @@ def shuffle_list(points:list[list[int]], shuffle_number: int) -> list[list[list[
     return combination_list
 
 
-def genetic_selection(shuffled_lists: list[list[list[int]]]) -> list[list[list[int]]]:
+def calculate_distribution(path: list[list[int]], sigma: float) -> float:
+    path_lenght = calculate_total_distance(path)
+    return math.exp(-path_lenght/sigma)
+
+
+def select_random_path(shuffled_list: list[list[list[int]]], max_value: float, sigma: float) -> list[list[int]]:
+    winner = random.uniform(0, max_value)
+
+    current_fitness = 0
+    for parent in shuffled_list:
+        current_fitness += calculate_distribution(parent, sigma)
+        if current_fitness >= winner:
+            return parent
+    return shuffled_list[-1]
+
+
+def roullete_selection(shuffled_list: list[list[list[int]]], sigma: float, population_size: int) -> list[list[list[int]]]:
+    survivors = []
+    roullete_maximum = sum([calculate_distribution(x, sigma) for x in shuffled_list])
+    for i in range(population_size//2):
+        survivors.append(select_random_path(shuffled_list, roullete_maximum, sigma))
+    return survivors
+
+
+def tournament_selection(shuffled_lists: list[list[list[int]]]) -> list[list[list[int]]]:
     random.shuffle(shuffled_lists)
     mid_number = len(shuffled_lists) // 2
     survivors = []
@@ -60,16 +85,12 @@ def genetic_selection(shuffled_lists: list[list[list[int]]]) -> list[list[list[i
 
 def create_child(first_parent: list[list[int]], second_parent: list[list[int]]):
     child = []
-    start = random.randint(0, len(first_parent) - 1)
-    finish = random.randint(start, len(first_parent))
-    first_sub_path = first_parent[start:finish]
-    remaining_second = [point for point in second_parent if point not in first_sub_path]
+    cross_point = random.randint(1, len(first_parent) - 1)
 
-    for i in range(len(first_parent)):
-        if start <= i < finish:
-            child.append(first_sub_path.pop(0))
-        else:
-            child.append(remaining_second.pop(0))
+    first_parent_part = first_parent[:cross_point]
+    second_parent_part = [point for point in second_parent if point not in first_parent_part]
+    child = first_parent_part + second_parent_part
+
     return child
 
 
@@ -92,7 +113,7 @@ def add_crossovers(survivors: list[list[list[int]]]) -> list[list[list[int]]]:
 def add_mutations(new_generation: list[list[list[int]]]) -> list[list[list[int]]]:
     mutated_generation = []
     for path in new_generation:
-        if random.randint(1, 100) < 10:
+        if random.randint(1, 100) < 30:
             point_a = random.randint(1, len(path) - 1)
             point_b = random.randint(1, len(path) - 1)
             path[point_a], path[point_b] = path[point_b], path[point_a]
@@ -112,17 +133,19 @@ def show_points_on_plane(points:list[list[int]], generation_number: int):
     plt.show()
 
 
-def optimize_path(points:list[list[int]]):
-    survivors = shuffle_list(points, 100)
-    for _ in range(1000):
-        survivors = genetic_selection(survivors)
+def optimize_path(points:list[list[int]], population: int):
+    survivors = shuffle_list(points, population)
+    counter = 0
+    for _ in range(100):
+        survivors = roullete_selection(survivors, 12, population_size=population)
         survivors = add_crossovers(survivors)
         survivors = add_mutations(survivors)
+        counter += 1
 
     the_best = return_shortest_path(survivors)
-    show_points_on_plane(the_best, 1)
+    show_points_on_plane(the_best, counter)
 
 
 if __name__ == "__main__":
-    list_points = [[-14, 8], [-4, 17], [13, -10], [-11, -12], [-4, 13], [-20, -12], [-4, 9], [-12, 18], [-4, -2], [-16, 11], [-3, 20], [-19, 19], [5, 0], [0, 13], [-9, -18]]
-    optimize_path(list_points)
+    list_points = [[-14, 8], [20, 17], [13, -10], [-11, -12], [-4, 13], [-20, -12], [-4, 9], [-12, 18], [-4, -2], [-16, 11], [-3, 20], [-19, 19], [5, 0], [0, 13], [-9, -18]]
+    optimize_path(list_points, population=100)
