@@ -162,9 +162,10 @@ def compare_selection(points: list[list[int]], population: int, generation: int,
         survivors_roulette = add_mutations(survivors_roulette)
         roulette_shortest.append(calculate_total_distance(return_shortest_path(survivors_roulette)))
 
-    plt.plot(len(survivors_roulette), [survivors_roulette, survivors_tournament])
+    plt.plot(range(len(roulette_shortest)), roulette_shortest)
+    plt.plot(range(len(tournament_shortest)), tournament_shortest)
     plt.show()
 
 if __name__ == "__main__":
     list_points = [[-14, 8], [20, 17], [13, -10], [-11, -12], [-4, 13], [-20, -12], [-4, 9], [-12, 18], [-4, -2], [-16, 11], [-3, 20], [-19, 19], [5, 0], [0, 13], [-9, -18]]
-    compare_selection(list_points, 100, 100, 10)
+    optimize_path(list_points, 100, 100)
