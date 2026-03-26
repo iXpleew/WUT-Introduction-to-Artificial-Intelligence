@@ -145,7 +145,8 @@ def optimize_path(points:list[list[int]], population: int):
     the_best = return_shortest_path(survivors)
     show_points_on_plane(the_best, counter)
 
-
+def compare_selection(roulette_history: list[float], tournament_history):
+    pass
 if __name__ == "__main__":
     list_points = [[-14, 8], [20, 17], [13, -10], [-11, -12], [-4, 13], [-20, -12], [-4, 9], [-12, 18], [-4, -2], [-16, 11], [-3, 20], [-19, 19], [5, 0], [0, 13], [-9, -18]]
     optimize_path(list_points, population=100)
