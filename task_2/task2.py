@@ -61,7 +61,7 @@ def select_random_path(shuffled_list: list[list[list[int]]], max_value: float, s
     return shuffled_list[-1]
 
 
-def roullete_selection(shuffled_list: list[list[list[int]]], sigma: float, population_size: int) -> list[list[list[int]]]:
+def roulette_selection(shuffled_list: list[list[list[int]]], sigma: float, population_size: int) -> list[list[list[int]]]:
     survivors = []
     roullete_maximum = sum([calculate_distribution(x, sigma) for x in shuffled_list])
     for i in range(population_size//2):
@@ -133,11 +133,11 @@ def show_points_on_plane(points:list[list[int]], generation_number: int):
     plt.show()
 
 
-def optimize_path(points:list[list[int]], population: int):
+def optimize_path(points:list[list[int]], population: int, generation_number:int):
     survivors = shuffle_list(points, population)
     counter = 0
-    for _ in range(100):
-        survivors = roullete_selection(survivors, 12, population_size=population)
+    for _ in range(generation_number):
+        survivors = tournament_selection(survivors)
         survivors = add_crossovers(survivors)
         survivors = add_mutations(survivors)
         counter += 1
@@ -145,7 +145,27 @@ def optimize_path(points:list[list[int]], population: int):
     the_best = return_shortest_path(survivors)
     show_points_on_plane(the_best, counter)
 
+def compare_selection(points: list[list[int]], population: int, generation: int, sigma: int):
+    survivors_roulette = shuffle_list(points, population)
+    survivors_tournament = shuffle_list(points, population)
+    roulette_shortest = []
+    tournament_shortest = []
+
+    for _ in range(generation):
+        survivors_tournament = tournament_selection(survivors_tournament)
+        survivors_tournament = add_crossovers(survivors_tournament)
+        survivors_tournament = add_mutations(survivors_tournament)
+        tournament_shortest.append(calculate_total_distance(return_shortest_path(survivors_tournament)))
+
+        survivors_roulette = roulette_selection(survivors_roulette, sigma, population)
+        survivors_roulette = add_crossovers(survivors_roulette)
+        survivors_roulette = add_mutations(survivors_roulette)
+        roulette_shortest.append(calculate_total_distance(return_shortest_path(survivors_roulette)))
+
+    plt.plot(range(len(roulette_shortest)), roulette_shortest)
+    plt.plot(range(len(tournament_shortest)), tournament_shortest)
+    plt.show()
 
 if __name__ == "__main__":
     list_points = [[-14, 8], [20, 17], [13, -10], [-11, -12], [-4, 13], [-20, -12], [-4, 9], [-12, 18], [-4, -2], [-16, 11], [-3, 20], [-19, 19], [5, 0], [0, 13], [-9, -18]]
-    optimize_path(list_points, population=100)
+    optimize_path(list_points, 100, 100)
