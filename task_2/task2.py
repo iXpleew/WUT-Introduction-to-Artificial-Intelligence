@@ -133,10 +133,10 @@ def show_points_on_plane(points:list[list[int]], generation_number: int):
     plt.show()
 
 
-def optimize_path(points:list[list[int]], population: int):
+def optimize_path(points:list[list[int]], population: int, generation_number:int):
     survivors = shuffle_list(points, population)
     counter = 0
-    for _ in range(100):
+    for _ in range(generation_number):
         survivors = roullete_selection(survivors, 12, population_size=population)
         survivors = add_crossovers(survivors)
         survivors = add_mutations(survivors)
@@ -145,8 +145,9 @@ def optimize_path(points:list[list[int]], population: int):
     the_best = return_shortest_path(survivors)
     show_points_on_plane(the_best, counter)
 
-def compare_selection(roulette_history: list[float], tournament_history):
-    pass
+def compare_selection(points: list[list[int]], population: int):
+    survivors = shuffle_list(points, population)
+
 if __name__ == "__main__":
     list_points = [[-14, 8], [20, 17], [13, -10], [-11, -12], [-4, 13], [-20, -12], [-4, 9], [-12, 18], [-4, -2], [-16, 11], [-3, 20], [-19, 19], [5, 0], [0, 13], [-9, -18]]
-    optimize_path(list_points, population=100)
+    optimize_path(list_points, population=100, generation_number=100)
