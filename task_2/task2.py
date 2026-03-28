@@ -171,4 +171,4 @@ def compare_selection(points: list[list[int]], population: int, generation: int,
 
 if __name__ == "__main__":
     list_points = [[-14, 8], [20, 17], [13, -10], [-11, -12], [-4, 13], [-20, -12], [-4, 9], [-12, 18], [-4, -2], [-16, 11], [-3, 20], [-19, 19], [5, 0], [0, 13], [-9, -18]]
-    optimize_path(list_points, 100, 200, 10, 25)
+    optimize_path(generate_random_points(20), 100, 500, 10, 10)
