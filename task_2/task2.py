@@ -137,7 +137,7 @@ def optimize_path(points:list[list[int]], population: int, generation:int, sigma
     survivors = shuffle_list(points, population)
     counter = 0
     for _ in range(generation):
-        survivors = roulette_selection(survivors, sigma, population)
+        survivors = tournament_selection(survivors)
         survivors = add_crossovers(survivors)
         survivors = add_mutations(survivors, mutation_prob)
         counter += 1
@@ -162,12 +162,13 @@ def compare_selection(points: list[list[int]], population: int, generation: int,
         survivors_roulette = add_mutations(survivors_roulette, mutation_prob)
         roulette_shortest.append(calculate_total_distance(return_shortest_path(survivors_roulette)))
 
-    plt.plot(range(len(roulette_shortest)), roulette_shortest)
-    #plt.plot(range(len(tournament_shortest)), tournament_shortest)
+    plt.plot(range(len(roulette_shortest)), roulette_shortest, label="roulette selection")
+    plt.plot(range(len(tournament_shortest)), tournament_shortest, label="tournament selection")
     plt.xlabel("Generation number")
     plt.ylabel("Path distamce")
+    plt.legend()
     plt.show()
 
 if __name__ == "__main__":
     list_points = [[-14, 8], [20, 17], [13, -10], [-11, -12], [-4, 13], [-20, -12], [-4, 9], [-12, 18], [-4, -2], [-16, 11], [-3, 20], [-19, 19], [5, 0], [0, 13], [-9, -18]]
-    optimize_path(list_points, 100, 200, 10, 50)
+    optimize_path(list_points, 100, 200, 10, 25)
