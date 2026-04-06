@@ -10,6 +10,11 @@ class MinMaxPlayer(Player):
     def __init__(self, name: str, depth_limit: int):
         super().__init__(name)
         self.depth_limit = depth_limit
+        self.scores = {
+            'x': 1,
+            'o': -1,
+            'tie': 0
+        }
 
     def make_move(self, board: Board, your_side: str):
         # TODO
