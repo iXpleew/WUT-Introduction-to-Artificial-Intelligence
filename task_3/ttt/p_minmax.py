@@ -13,10 +13,16 @@ class MinMaxPlayer(Player):
 
     def make_move(self, board: Board, your_side: str):
         # TODO
-        return None
+        for index, spot in enumerate(board.board):
+            if spot == " ":
+                return index
+            
 
     def minimax(self, board: Board, side: str, depth: int):
         # TODO
+        for spot in board.board:
+            if spot == ' ':
+                self.make_move(board, side)
         return None, None
 
     def evaluate(self, board: Board, side: str):
