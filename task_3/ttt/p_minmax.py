@@ -4,6 +4,7 @@ Author: Katarzyna Nałęcz-Charkiewicz
 
 from board import Board
 from player import Player
+import numpy
 
 
 class MinMaxPlayer(Player):
@@ -13,21 +14,62 @@ class MinMaxPlayer(Player):
         self.scores = {
             'x': 1,
             'o': -1,
-            'draw': 0
+            "draw": 0
         }
 
     def make_move(self, board: Board, your_side: str):
         # TODO
-        for index, spot in enumerate(board.board):
-            if spot == " ":
-                return index
+        move = None
+        if your_side == 'o':
+            best_score = numpy.inf
+            for index, spot in enumerate(board.board):
+                if spot == " ":
+                    copied_board = board.clone()
+                    copied_board.board[index] = 'o'[:]
+                    score = self.minimax(copied_board, 'x', self.depth_limit)
+                    if best_score > score:
+                        best_score = score
+                        move = index
+        else:
+            best_score = -numpy.inf
+            for index, spot in enumerate(board.board):
+                if spot == " ":
+                    copied_board = board.clone()
+                    copied_board.board[index] = 'x'[:]
+                    score = self.minimax(copied_board, 'o', self.depth_limit)
+                    if best_score < score:
+                        best_score = score
+                        move = index
+        return move
+
+        
             
 
     def minimax(self, board: Board, side: str, depth: int):
         # TODO
-        if board.who_is_winner() is not None:
-            
-        return None, None
+        winner = board.who_is_winner()
+        if winner is not None:
+            return self.scores[winner]
+    
+        if side == "o":
+            best_score = numpy.inf
+            for index, character in enumerate(board.board):
+                if character == " ":
+                    copied_board = board.clone()
+                    copied_board.board[index] = side[:]
+                    score = self.minimax(copied_board, 'x', depth+1)
+                    best_score = min(score, best_score)
+            return best_score
+        else:
+            best_score = -numpy.inf
+            for index, character in enumerate(board.board):
+                if character == " ":
+                    copied_board = board.clone()
+                    copied_board.board[index] = side[:]
+                    score = self.minimax(copied_board, "o", depth+1)
+                    best_score = max(score, best_score)
+            return best_score
+
 
     def evaluate(self, board: Board, side: str):
         # TODO
