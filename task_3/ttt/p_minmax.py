@@ -13,7 +13,7 @@ class MinMaxPlayer(Player):
         self.scores = {
             'x': 1,
             'o': -1,
-            'tie': 0
+            'draw': 0
         }
 
     def make_move(self, board: Board, your_side: str):
@@ -25,9 +25,8 @@ class MinMaxPlayer(Player):
 
     def minimax(self, board: Board, side: str, depth: int):
         # TODO
-        for spot in board.board:
-            if spot == ' ':
-                self.make_move(board, side)
+        if board.who_is_winner() is not None:
+            
         return None, None
 
     def evaluate(self, board: Board, side: str):

@@ -68,7 +68,10 @@ class Board:
             winner = self._check_line(start, step)
             if winner:
                 return winner
-        return None
+        for character in self.board:
+            if character == " ":
+                return None
+        return "draw"
 
     def empty_indexes(self):
         indexes = []
