@@ -73,4 +73,7 @@ class MinMaxPlayer(Player):
 
     def evaluate(self, board: Board, side: str):
         # TODO
-        return 0
+        winner = board.who_is_winner()
+        if winner is not None:
+            return self.scores[winner]
+        return None
