@@ -16,20 +16,21 @@ class MinMaxPlayer(Player):
             'o': -1,
             "draw": 0
         }
+        
 
     def make_move(self, board: Board, your_side: str):
         # TODO
         move = None
         if your_side == 'o':
             best_score = numpy.inf
-            for index, spot in enumerate(board.board):
-                if spot == " ":
-                    copied_board = board.clone()
-                    copied_board.board[index] = 'o'[:]
-                    score = self.minimax(copied_board, 'x', self.depth_limit)
-                    if best_score > score:
-                        best_score = score
-                        move = index
+            indexes = self.find_empty_spaces(board)
+            for index in indexes:
+                copied_board = board.clone()
+                copied_board.board[index] = 'o'[:]
+                score = self.minimax(copied_board, 'x', self.depth_limit)
+                if best_score > score:
+                    best_score = score
+                    move = index
         else:
             best_score = -numpy.inf
             for index, spot in enumerate(board.board):
@@ -79,7 +80,9 @@ class MinMaxPlayer(Player):
         return None
     
     
-    def find_empty_space(board: Board) -> int:
+    def find_empty_spaces(self, board: Board) -> list[int]:
+        empty_spaces = []
         for index, character in enumerate(board.board):
             if character == " ":
-                return index;
+                empty_spaces.append(index);
+        return empty_spaces
