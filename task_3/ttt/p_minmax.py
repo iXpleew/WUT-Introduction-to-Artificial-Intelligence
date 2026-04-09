@@ -21,9 +21,9 @@ class MinMaxPlayer(Player):
     def make_move(self, board: Board, your_side: str):
         # TODO
         move = None
+        indexes = self.find_empty_spaces(board)
         if your_side == 'o':
             best_score = numpy.inf
-            indexes = self.find_empty_spaces(board)
             for index in indexes:
                 copied_board = board.clone()
                 copied_board.board[index] = 'o'[:]
@@ -33,14 +33,13 @@ class MinMaxPlayer(Player):
                     move = index
         else:
             best_score = -numpy.inf
-            for index, spot in enumerate(board.board):
-                if spot == " ":
-                    copied_board = board.clone()
-                    copied_board.board[index] = 'x'[:]
-                    score = self.minimax(copied_board, 'o', self.depth_limit)
-                    if best_score < score:
-                        best_score = score
-                        move = index
+            for index in indexes
+                copied_board = board.clone()
+                copied_board.board[index] = 'x'[:]
+                score = self.minimax(copied_board, 'o', self.depth_limit)
+                if best_score < score:
+                    best_score = score
+                    move = index
         return move
 
         
@@ -51,24 +50,22 @@ class MinMaxPlayer(Player):
         winner = board.who_is_winner()
         if winner is not None:
             return self.scores[winner]
-    
+        indexes = self.find_empty_spaces(board)
         if side == "o":
             best_score = numpy.inf
-            for index, character in enumerate(board.board):
-                if character == " ":
-                    copied_board = board.clone()
-                    copied_board.board[index] = side[:]
-                    score = self.minimax(copied_board, 'x', depth+1)
-                    best_score = min(score, best_score)
+            for index in indexes:
+                copied_board = board.clone()
+                copied_board.board[index] = side[:]
+                score = self.minimax(copied_board, 'x', depth+1)
+                best_score = min(score, best_score)
             return best_score
         else:
             best_score = -numpy.inf
-            for index, character in enumerate(board.board):
-                if character == " ":
-                    copied_board = board.clone()
-                    copied_board.board[index] = side[:]
-                    score = self.minimax(copied_board, "o", depth+1)
-                    best_score = max(score, best_score)
+            for index in indexes:
+                copied_board = board.clone()
+                copied_board.board[index] = side[:]
+                score = self.minimax(copied_board, "o", depth+1)
+                best_score = max(score, best_score)
             return best_score
 
 
