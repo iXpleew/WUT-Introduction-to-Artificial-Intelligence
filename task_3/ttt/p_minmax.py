@@ -77,3 +77,9 @@ class MinMaxPlayer(Player):
         if winner is not None:
             return self.scores[winner]
         return None
+    
+    
+    def find_empty_space(board: Board) -> int:
+        for index, character in enumerate(board.board):
+            if character == " ":
+                return index;
