@@ -51,6 +51,8 @@ class MinMaxPlayer(Player):
         if not indexes:
             return self.scores["draw"]
         
+        opponent = 'x' if side == 'o' else 'o'
+        best_score = numpy.inf if side == 'o' else -numpy.inf
         if side == "o":
             best_score = numpy.inf
             for index in indexes:
@@ -68,14 +70,6 @@ class MinMaxPlayer(Player):
                 best_score = max(score, best_score)
             return best_score
 
-
-    def evaluate(self, board: Board, side: str):
-        # TODO
-        winner = self.get_winner(board)
-        if winner is not None:
-            return self.scores[winner]
-        return None
-    
     
     def find_empty_spaces(self, board: Board) -> list[int]:
         empty_spaces = []
@@ -83,12 +77,3 @@ class MinMaxPlayer(Player):
             if character == " ":
                 empty_spaces.append(index);
         return empty_spaces
-
-
-    def get_winner(self, board: Board):
-        if self.find_empty_spaces(board):
-            return None
-        if board.who_is_winner() is None:
-            return "draw"
-        else:
-            return board.who_is_winner()
