@@ -27,7 +27,7 @@ class MinMaxPlayer(Player):
         for index in indexes:
             copied_board = board.clone()
             copied_board.board[index] = your_side[:]
-            score = self.minimax(copied_board, opponent_side, self.depth_limit)
+            score = self.minimax(copied_board, opponent_side, self.depth_limit - 1)
             
             if your_side == "o":
                 if best_score > score:
@@ -42,10 +42,11 @@ class MinMaxPlayer(Player):
 
     def minimax(self, board: Board, side: str, depth: int):
         winner = board.who_is_winner()
+        
         if winner is not None:
-            return self.scores[winner]
+            return self.scores[winner] * depth
         indexes = self.find_empty_spaces(board)
-        if not indexes:
+        if not indexes or depth == 0:
             return self.scores["draw"]
         
         opponent = 'x' if side == 'o' else 'o'
@@ -53,7 +54,7 @@ class MinMaxPlayer(Player):
         for index in indexes:
             copied_board = board.clone()
             copied_board.board[index] = side[:]
-            score = self.minimax(copied_board, opponent, depth+1)
+            score = self.minimax(copied_board, opponent, depth-1)
             if side == "o":
                 best_score = min(best_score, score)
             else:
