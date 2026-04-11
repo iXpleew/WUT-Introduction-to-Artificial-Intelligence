@@ -33,7 +33,7 @@ class MinMaxPlayer(Player):
                     move = index
         else:
             best_score = -numpy.inf
-            for index in indexes
+            for index in indexes:
                 copied_board = board.clone()
                 copied_board.board[index] = 'x'[:]
                 score = self.minimax(copied_board, 'o', self.depth_limit)
@@ -42,8 +42,6 @@ class MinMaxPlayer(Player):
                     move = index
         return move
 
-        
-            
 
     def minimax(self, board: Board, side: str, depth: int):
         # TODO
@@ -83,3 +81,12 @@ class MinMaxPlayer(Player):
             if character == " ":
                 empty_spaces.append(index);
         return empty_spaces
+
+
+    def get_winner(self, board: Board):
+        if self.find_empty_spaces(board):
+            return None
+        if board.who_is_winner() is None:
+            return "draw"
+        else:
+            return board.who_is_winner()
