@@ -22,21 +22,19 @@ class MinMaxPlayer(Player):
         # TODO
         move = None
         indexes = self.find_empty_spaces(board)
-        if your_side == 'o':
-            best_score = numpy.inf
-            for index in indexes:
-                copied_board = board.clone()
-                copied_board.board[index] = 'o'[:]
-                score = self.minimax(copied_board, 'x', self.depth_limit)
+
+        best_score = numpy.inf if your_side == 'o' else -numpy.inf
+        opponent_side = 'x' if your_side == 'o' else 'o'
+        for index in indexes:
+            copied_board = board.clone()
+            copied_board.board[index] = your_side[:]
+            score = self.minimax(copied_board, opponent_side, self.depth_limit)
+            
+            if your_side == "o":
                 if best_score > score:
                     best_score = score
                     move = index
-        else:
-            best_score = -numpy.inf
-            for index in indexes:
-                copied_board = board.clone()
-                copied_board.board[index] = 'x'[:]
-                score = self.minimax(copied_board, 'o', self.depth_limit)
+            else:
                 if best_score < score:
                     best_score = score
                     move = index
@@ -45,12 +43,14 @@ class MinMaxPlayer(Player):
 
     def minimax(self, board: Board, side: str, depth: int):
         # TODO
+        
         winner = board.who_is_winner()
         if winner is not None:
             return self.scores[winner]
         indexes = self.find_empty_spaces(board)
         if not indexes:
             return self.scores["draw"]
+        
         if side == "o":
             best_score = numpy.inf
             for index in indexes:
