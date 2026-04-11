@@ -45,7 +45,7 @@ class MinMaxPlayer(Player):
 
     def minimax(self, board: Board, side: str, depth: int):
         # TODO
-        winner = board.who_is_winner()
+        winner = self.get_winner(board)
         if winner is not None:
             return self.scores[winner]
         indexes = self.find_empty_spaces(board)
@@ -69,7 +69,7 @@ class MinMaxPlayer(Player):
 
     def evaluate(self, board: Board, side: str):
         # TODO
-        winner = board.who_is_winner()
+        winner = self.get_winner(board)
         if winner is not None:
             return self.scores[winner]
         return None
