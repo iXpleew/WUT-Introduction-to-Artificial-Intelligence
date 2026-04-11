@@ -19,7 +19,6 @@ class MinMaxPlayer(Player):
         
 
     def make_move(self, board: Board, your_side: str):
-        # TODO
         move = None
         indexes = self.find_empty_spaces(board)
 
@@ -42,8 +41,6 @@ class MinMaxPlayer(Player):
 
 
     def minimax(self, board: Board, side: str, depth: int):
-        # TODO
-        
         winner = board.who_is_winner()
         if winner is not None:
             return self.scores[winner]
@@ -53,27 +50,16 @@ class MinMaxPlayer(Player):
         
         opponent = 'x' if side == 'o' else 'o'
         best_score = numpy.inf if side == 'o' else -numpy.inf
-        if side == "o":
-            best_score = numpy.inf
-            for index in indexes:
-                copied_board = board.clone()
-                copied_board.board[index] = side[:]
-                score = self.minimax(copied_board, 'x', depth+1)
-                best_score = min(score, best_score)
-            return best_score
-        else:
-            best_score = -numpy.inf
-            for index in indexes:
-                copied_board = board.clone()
-                copied_board.board[index] = side[:]
-                score = self.minimax(copied_board, "o", depth+1)
-                best_score = max(score, best_score)
-            return best_score
+        for index in indexes:
+            copied_board = board.clone()
+            copied_board.board[index] = side[:]
+            score = self.minimax(copied_board, opponent, depth+1)
+            if side == "o":
+                best_score = min(best_score, score)
+            else:
+                best_score = max(best_score, score)
+        return best_score
 
     
     def find_empty_spaces(self, board: Board) -> list[int]:
-        empty_spaces = []
-        for index, character in enumerate(board.board):
-            if character == " ":
-                empty_spaces.append(index);
-        return empty_spaces
+        return [index for index, character in enumerate(board.board) if character == ' ']
