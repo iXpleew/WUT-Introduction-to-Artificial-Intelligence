@@ -45,10 +45,12 @@ class MinMaxPlayer(Player):
 
     def minimax(self, board: Board, side: str, depth: int):
         # TODO
-        winner = self.get_winner(board)
+        winner = board.who_is_winner()
         if winner is not None:
             return self.scores[winner]
         indexes = self.find_empty_spaces(board)
+        if not indexes:
+            return self.scores["draw"]
         if side == "o":
             best_score = numpy.inf
             for index in indexes:
