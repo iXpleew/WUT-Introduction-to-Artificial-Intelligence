@@ -52,8 +52,6 @@ class MinMaxPlayer(Player):
         opponent = 'x' if side == 'o' else 'o'
         best_score = numpy.inf if side == 'o' else -numpy.inf
         for index in indexes:
-            if alpha >= beta:
-                break
             copied_board = board.clone()
             copied_board.board[index] = side[:]
             score = self.minimax(copied_board, opponent, depth-1, alpha, beta)
@@ -63,6 +61,9 @@ class MinMaxPlayer(Player):
             else:
                 best_score = max(best_score, score)
                 alpha = best_score
+            
+            if alpha >= beta:
+                break
         return best_score
 
     
