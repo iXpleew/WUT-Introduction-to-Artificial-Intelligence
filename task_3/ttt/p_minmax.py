@@ -40,7 +40,7 @@ class MinMaxPlayer(Player):
         return move
 
 
-    def minimax(self, board: Board, side: str, depth: int):
+    def minimax(self, board: Board, side: str, depth: int, alpha=-numpy.inf, beta=numpy.inf):
         winner = board.who_is_winner()
         
         if winner is not None:
@@ -52,13 +52,17 @@ class MinMaxPlayer(Player):
         opponent = 'x' if side == 'o' else 'o'
         best_score = numpy.inf if side == 'o' else -numpy.inf
         for index in indexes:
+            if alpha >= beta:
+                break
             copied_board = board.clone()
             copied_board.board[index] = side[:]
-            score = self.minimax(copied_board, opponent, depth-1)
+            score = self.minimax(copied_board, opponent, depth-1, alpha, beta)
             if side == "o":
                 best_score = min(best_score, score)
+                beta = best_score
             else:
                 best_score = max(best_score, score)
+                alpha = best_score
         return best_score
 
     
