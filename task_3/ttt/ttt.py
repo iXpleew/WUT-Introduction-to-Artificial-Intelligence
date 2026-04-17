@@ -103,12 +103,12 @@ if __name__ == "__main__":
     try:
         depth_limit1 = int(sys.argv[3])
     except IndexError:
-        depth_limit1 = 9 
+        depth_limit1 = 6
 
     try:
         depth_limit2 = int(sys.argv[4])
     except IndexError:
-        depth_limit2 = 9
+        depth_limit2 = 6
 
     player1 = build_player(player1_type, "o", depth_limit1)
     player2 = build_player(player2_type, "x", depth_limit2)
