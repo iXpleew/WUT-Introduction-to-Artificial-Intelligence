@@ -99,9 +99,19 @@ if __name__ == "__main__":
     print(sys.argv)
     player1_type = sys.argv[1] if len(sys.argv) > 1 else "random"
     player2_type = sys.argv[2] if len(sys.argv) > 2 else "random"
-    depth_limit = 9 if board_size == 3 else 6
-    player1 = build_player(player1_type, "o", depth_limit)
-    player2 = build_player(player2_type, "x", depth_limit)
+
+    try:
+        depth_limit1 = int(sys.argv[3])
+    except IndexError:
+        depth_limit1 = 9 
+
+    try:
+        depth_limit2 = int(sys.argv[4])
+    except IndexError:
+        depth_limit2 = 9
+
+    player1 = build_player(player1_type, "o", depth_limit1)
+    player2 = build_player(player2_type, "x", depth_limit2)
     game = Game(board_size, player1, player2)
     player1.bind_console(game.console)
     player2.bind_console(game.console)

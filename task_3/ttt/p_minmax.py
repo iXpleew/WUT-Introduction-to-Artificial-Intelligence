@@ -44,7 +44,7 @@ class MinMaxPlayer(Player):
         winner = board.who_is_winner()
         
         if winner is not None:
-            return self.scores[winner] * depth
+            return self.scores[winner] * (depth+1)
         indexes = self.find_empty_spaces(board)
         if not indexes or depth == 0:
             return self.scores["draw"]
@@ -57,10 +57,10 @@ class MinMaxPlayer(Player):
             score = self.minimax(copied_board, opponent, depth-1, alpha, beta)
             if side == "o":
                 best_score = min(best_score, score)
-                beta = best_score
+                beta = min(best_score, beta)
             else:
                 best_score = max(best_score, score)
-                alpha = best_score
+                alpha = max(best_score, alpha)
             
             if alpha >= beta:
                 break
