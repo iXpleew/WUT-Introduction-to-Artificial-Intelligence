@@ -17,7 +17,7 @@ def calculate_entropy(data_set: pd.DataFrame, target_column: pd.Series):
     return entropy
 
 
-if __name__=="__main__":
+if __name__== "__main__":
     provided_data = get_csv_data("tic+tac+toe+endgame/tic-tac-toe.data")
     calculate_entropy(provided_data, provided_data[-1])
 
