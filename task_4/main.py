@@ -13,8 +13,9 @@ def get_csv_data(file_name: str) -> list[pd.DataFrame]:
     return [training_data, testing_data]
 
 
-def calculate_entropy():
+def calculate_entropy(data_set: pd.DataFrame, target_column: pd.Series):
     pass
+
 
 if __name__=="__main__":
     df_training, df_testing = get_csv_data("tic+tac+toe+endgame/tic-tac-toe.data")
