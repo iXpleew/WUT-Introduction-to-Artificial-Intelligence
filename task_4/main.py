@@ -4,7 +4,7 @@ import numpy as np
 
 
 def get_csv_data(file_name: str) -> list[pd.DataFrame]:
-    ttt_info = pd.read_csv(file_name)
+    ttt_info = pd.read_csv(file_name).sample(frac=1)
     file_lenght = len(ttt_info)
     training_border = int(file_lenght * 7/10)
 
@@ -12,6 +12,9 @@ def get_csv_data(file_name: str) -> list[pd.DataFrame]:
     testing_data = ttt_info[training_border:]
     return [training_data, testing_data]
 
+
+def calculate_entropy():
+    pass
 
 if __name__=="__main__":
     df_training, df_testing = get_csv_data("tic+tac+toe+endgame/tic-tac-toe.data")
