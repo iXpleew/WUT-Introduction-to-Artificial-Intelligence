@@ -24,7 +24,6 @@ def get_areas_gains(data: pd.DataFrame, target_column: pd.Series) -> dict[str, f
     }
     for index, area in enumerate(information_gain_dict.keys()):
         curr_info_gain = calculate_information_gain(provided_data, provided_data.iloc[:, index], target_column)
-        print(f"Information Gain for {area} index is {curr_info_gain}")
         information_gain_dict[area] = curr_info_gain
     return information_gain_dict
 
@@ -54,6 +53,7 @@ def calculate_information_gain(data_set: pd.DataFrame, feature: pd.Series, targe
     return information_gain
 
 
+
 def id3(data: pd.DataFrame, areas: list[str], target_column: pd.Series):
     if len(data[target_column.name].unique()) == 1:
         return data[target_column].iloc[0]
@@ -61,7 +61,13 @@ def id3(data: pd.DataFrame, areas: list[str], target_column: pd.Series):
     if len(areas) == 0:
         return data[target_column].mode().iloc[0]
     
-    best_area = max(areas, key=lambda x: calculate_information_gain(data, x, target_column))
+    best_area = max(areas, key=lambda x: calculate_information_gain(data, data[x], target_column))
+    tree = {best_area: {}}
+    areas = [area for area in areas if area != best_area]
+    for value in data[best_area].unique():
+        subset = data[data[best_area] == value]
+        tree[best_area][value] = id3(subset, areas, target_column)
+    return tree
 
 
 if __name__ == "__main__":
