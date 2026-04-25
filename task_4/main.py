@@ -9,7 +9,7 @@ def get_csv_data(file_name: str) -> pd.DataFrame:
     return ttt_info
 
 
-def get_board_info() -> dict[str, float]:
+def get_areas_gains(data: pd.DataFrame) -> dict[str, float]:
     information_gain_dict = {
         "Top-left": 0.0,
         "Top": 0.0,
@@ -21,11 +21,13 @@ def get_board_info() -> dict[str, float]:
         "Bottom": 0.0,
         "Bottom-right": 0.0
     }
-    
-    for i in range(9):
-        curr_info_gain = calculate_information_gain(provided_data, provided_data.iloc[:, i], provided_data.iloc[:, -1])
-        print(f"Information Gain for {i} index is {curr_info_gain}")
+    target_column = provided_data.iloc[:, -1]
+    for index, area in enumerate(information_gain_dict.keys()):
+        curr_info_gain = calculate_information_gain(provided_data, provided_data.iloc[:, index], target_column)
+        print(f"Information Gain for {area} index is {curr_info_gain}")
+        information_gain_dict[area] = curr_info_gain
     return information_gain_dict
+
 
 def calculate_entropy(data_set: pd.DataFrame, target_column: pd.Series):
     row_number = len(data_set)
@@ -66,7 +68,4 @@ if __name__ == "__main__":
     provided_data = get_csv_data("tic+tac+toe+endgame/tic-tac-toe.data")
     data_set_entropy = calculate_entropy(provided_data, provided_data.iloc[:, -1])
     print(f"Entropy of data set is {data_set_entropy}")
-
-    for i in range(9):
-        curr_info_gain = calculate_information_gain(provided_data, provided_data.iloc[:, i], provided_data.iloc[:, -1])
-        print(f"Information Gain for {i} index is {curr_info_gain}")
+    print(get_areas_gains(provided_data))
