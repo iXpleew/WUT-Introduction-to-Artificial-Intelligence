@@ -68,7 +68,9 @@ def create_tree(data: pd.DataFrame, areas: list[str], target_column: pd.Series):
         return data[target_column].mode().iloc[0]
     
     best_area = max(areas, key=lambda x: calculate_information_gain(data, data[x], target_column))
-    tree = {best_area: {}}
+    most_common_outcome = data[target_values.name].mode().iloc[0]
+
+    tree = {best_area: {"current_optimal": most_common_outcome}}
     areas = [area for area in areas if area != best_area]
     for value in data[best_area].unique():
         subset = data[data[best_area] == value]
@@ -77,14 +79,15 @@ def create_tree(data: pd.DataFrame, areas: list[str], target_column: pd.Series):
 
 
 def find_answer(tree: dict, sample_set: pd.Series):
-    answer = ""
     if isinstance(tree, str):
         return tree
     else:
         current_area = next(iter(tree.keys()))
-        sample_area = sample_set[current_area]
-        answer = find_answer(tree[current_area][sample_area], sample_set)
-    return answer
+        char_on_area = sample_set[current_area]
+        if char_on_area not in tree[current_area]:
+            return tree[current_area]["current_optimal"]
+        else:
+            return find_answer(tree[current_area][char_on_area], sample_set)
 
 
 def validate_data(tree: dict, validate_set: pd.DataFrame):
