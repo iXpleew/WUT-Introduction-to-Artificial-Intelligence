@@ -5,11 +5,12 @@ import math
 
 
 def get_csv_data(file_name: str) -> pd.DataFrame:
-    ttt_info = pd.read_csv(file_name).sample(frac=1)
+    column_names = ["Top-left", "Top", "Top-right", "Left", "Middle", "Right", "Bottom-left", "Bottom", "Bottom-right", "Target"]
+    ttt_info = pd.read_csv(file_name, names=column_names).sample(frac=1)
     return ttt_info
 
 
-def get_areas_gains(data: pd.DataFrame) -> dict[str, float]:
+def get_areas_gains(data: pd.DataFrame, target_column: pd.Series) -> dict[str, float]:
     information_gain_dict = {
         "Top-left": 0.0,
         "Top": 0.0,
@@ -17,11 +18,10 @@ def get_areas_gains(data: pd.DataFrame) -> dict[str, float]:
         "Left": 0.0,
         "Middle": 0.0,
         "Right": 0.0,
-        "Bottom-Left": 0.0,
+        "Bottom-left": 0.0,
         "Bottom": 0.0,
         "Bottom-right": 0.0
     }
-    target_column = provided_data.iloc[:, -1]
     for index, area in enumerate(information_gain_dict.keys()):
         curr_info_gain = calculate_information_gain(provided_data, provided_data.iloc[:, index], target_column)
         print(f"Information Gain for {area} index is {curr_info_gain}")
@@ -54,18 +54,20 @@ def calculate_information_gain(data_set: pd.DataFrame, feature: pd.Series, targe
     return information_gain
 
 
-def id3(data: pd.DataFrame, features: list[str], target_column: pd.Series):
+def id3(data: pd.DataFrame, areas: list[str], target_column: pd.Series):
     if len(data[target_column.name].unique()) == 1:
         return data[target_column].iloc[0]
     
-    if len(features) == 0:
+    if len(areas) == 0:
         return data[target_column].mode().iloc[0]
     
-    best_feature = max(features, key=lambda x: calculate_information_gain(data, x, target_column))
+    best_area = max(areas, key=lambda x: calculate_information_gain(data, x, target_column))
 
 
 if __name__ == "__main__":
     provided_data = get_csv_data("tic+tac+toe+endgame/tic-tac-toe.data")
-    data_set_entropy = calculate_entropy(provided_data, provided_data.iloc[:, -1])
-    print(f"Entropy of data set is {data_set_entropy}")
-    print(get_areas_gains(provided_data))
+    target_values = provided_data.iloc[:, -1]
+    data_set_entropy = calculate_entropy(provided_data, target_values)
+    areas_gains = get_areas_gains(provided_data, target_values)
+    #id3(provided_data, list(areas_gains.keys()), target_values)
+    print(provided_data.head())
