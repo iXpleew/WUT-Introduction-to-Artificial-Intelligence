@@ -9,6 +9,24 @@ def get_csv_data(file_name: str) -> pd.DataFrame:
     return ttt_info
 
 
+def get_board_info() -> dict[str, float]:
+    information_gain_dict = {
+        "Top-left": 0.0,
+        "Top": 0.0,
+        "Top-right": 0.0,
+        "Left": 0.0,
+        "Middle": 0.0,
+        "Right": 0.0,
+        "Bottom-Left": 0.0,
+        "Bottom": 0.0,
+        "Bottom-right": 0.0
+    }
+    
+    for i in range(9):
+        curr_info_gain = calculate_information_gain(provided_data, provided_data.iloc[:, i], provided_data.iloc[:, -1])
+        print(f"Information Gain for {i} index is {curr_info_gain}")
+    return information_gain_dict
+
 def calculate_entropy(data_set: pd.DataFrame, target_column: pd.Series):
     row_number = len(data_set)
     target_values = data_set[target_column.name].unique()
@@ -32,6 +50,16 @@ def calculate_information_gain(data_set: pd.DataFrame, feature: pd.Series, targe
         weighted_entropy += proportion * calculate_entropy(subset, target_column)
     information_gain = parent_entropy - weighted_entropy
     return information_gain
+
+
+def id3(data: pd.DataFrame, features: list[str], target_column: pd.Series):
+    if len(data[target_column.name].unique()) == 1:
+        return data[target_column].iloc[0]
+    
+    if len(features) == 0:
+        return data[target_column].mode().iloc[0]
+    
+    best_feature = max(features, key=lambda x: calculate_information_gain(data, x, target_column))
 
 
 if __name__ == "__main__":
