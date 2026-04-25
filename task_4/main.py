@@ -53,6 +53,12 @@ def calculate_information_gain(data_set: pd.DataFrame, feature: pd.Series, targe
     return information_gain
 
 
+def split_data(data_set: pd.DataFrame) -> list[pd.DataFrame]:
+    data_lenght = len(data_set)
+    first_border = int(data_lenght * 7/10)
+    second_border = int(data_lenght * 8.5/10)
+    return [data_set.iloc[:first_border], data_set.iloc[first_border:second_border], data_set.iloc[second_border:]]
+
 
 def id3(data: pd.DataFrame, areas: list[str], target_column: pd.Series):
     if len(data[target_column.name].unique()) == 1:
