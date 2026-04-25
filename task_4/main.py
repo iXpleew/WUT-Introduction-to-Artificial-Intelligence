@@ -6,7 +6,7 @@ import math
 
 def get_csv_data(file_name: str) -> pd.DataFrame:
     column_names = ["Top-left", "Top", "Top-right", "Left", "Middle", "Right", "Bottom-left", "Bottom", "Bottom-right", "Target"]
-    ttt_info = pd.read_csv(file_name, names=column_names).sample(frac=1)
+    ttt_info = pd.read_csv(file_name, names=column_names).sample(frac=1, random_state=1)
     return ttt_info
 
 
@@ -53,16 +53,16 @@ def calculate_information_gain(data_set: pd.DataFrame, feature: pd.Series, targe
     return information_gain
 
 
-def split_data(data_set: pd.DataFrame) -> list[pd.DataFrame]:
+def split_data(data_set: pd.DataFrame) -> tuple:
     data_lenght = len(data_set)
     first_border = int(data_lenght * 7/10)
     second_border = int(data_lenght * 8.5/10)
-    return [data_set.iloc[:first_border], data_set.iloc[first_border:second_border], data_set.iloc[second_border:]]
+    return data_set.iloc[:first_border], data_set.iloc[first_border:second_border], data_set.iloc[second_border:]
 
 
 def id3(data: pd.DataFrame, areas: list[str], target_column: pd.Series):
     if len(data[target_column.name].unique()) == 1:
-        return data[target_column].iloc[0]
+        return data[target_column.name].iloc[0]
     
     if len(areas) == 0:
         return data[target_column].mode().iloc[0]
@@ -78,8 +78,10 @@ def id3(data: pd.DataFrame, areas: list[str], target_column: pd.Series):
 
 if __name__ == "__main__":
     provided_data = get_csv_data("tic+tac+toe+endgame/tic-tac-toe.data")
-    target_values = provided_data.iloc[:, -1]
-    data_set_entropy = calculate_entropy(provided_data, target_values)
-    areas_gains = get_areas_gains(provided_data, target_values)
-    #id3(provided_data, list(areas_gains.keys()), target_values)
-    print(provided_data.head())
+    train_set, validate_set, test_set = split_data(provided_data)
+
+    target_values = train_set.iloc[:, -1]
+    data_set_entropy = calculate_entropy(train_set, target_values)
+    areas_gains = get_areas_gains(train_set, target_values)
+    tree = id3(train_set, list(areas_gains.keys()), target_values)
+    print(tree)
