@@ -60,7 +60,7 @@ def split_data(data_set: pd.DataFrame) -> tuple:
     return data_set.iloc[:first_border], data_set.iloc[first_border:second_border], data_set.iloc[second_border:]
 
 
-def id3(data: pd.DataFrame, areas: list[str], target_column: pd.Series):
+def create_tree(data: pd.DataFrame, areas: list[str], target_column: pd.Series):
     if len(data[target_column.name].unique()) == 1:
         return data[target_column.name].iloc[0]
     
@@ -72,8 +72,25 @@ def id3(data: pd.DataFrame, areas: list[str], target_column: pd.Series):
     areas = [area for area in areas if area != best_area]
     for value in data[best_area].unique():
         subset = data[data[best_area] == value]
-        tree[best_area][value] = id3(subset, areas, target_column)
+        tree[best_area][value] = create_tree(subset, areas, target_column)
     return tree
+
+
+def find_answer(tree: dict, sample_set: pd.Series):
+    answer = ""
+    if isinstance(tree, str):
+        return tree
+    else:
+        current_area = next(iter(tree.keys()))
+        sample_area = sample_set[current_area]
+        answer = find_answer(tree[current_area][sample_area], sample_set)
+    return answer
+
+
+def validate_data(tree: dict, validate_set: pd.DataFrame):
+    correct_prediction = 0
+
+    pass
 
 
 if __name__ == "__main__":
@@ -83,5 +100,5 @@ if __name__ == "__main__":
     target_values = train_set.iloc[:, -1]
     data_set_entropy = calculate_entropy(train_set, target_values)
     areas_gains = get_areas_gains(train_set, target_values)
-    tree = id3(train_set, list(areas_gains.keys()), target_values)
+    tree = create_tree(train_set, list(areas_gains.keys()), target_values)
     print(tree)
