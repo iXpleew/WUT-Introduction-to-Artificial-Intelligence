@@ -10,7 +10,7 @@ def get_csv_data(file_name: str) -> pd.DataFrame:
     return ttt_info
 
 
-def get_areas_gains(data: pd.DataFrame, target_column: pd.Series) -> dict[str, float]:
+def get_areas_gains(training_data: pd.DataFrame, target_column: pd.Series) -> dict[str, float]:
     information_gain_dict = {
         "Top-left": 0.0,
         "Top": 0.0,
@@ -23,7 +23,7 @@ def get_areas_gains(data: pd.DataFrame, target_column: pd.Series) -> dict[str, f
         "Bottom-right": 0.0
     }
     for index, area in enumerate(information_gain_dict.keys()):
-        curr_info_gain = calculate_information_gain(provided_data, provided_data.iloc[:, index], target_column)
+        curr_info_gain = calculate_information_gain(training_data, training_data.iloc[:, index], target_column)
         information_gain_dict[area] = curr_info_gain
     return information_gain_dict
 
@@ -68,7 +68,7 @@ def create_tree(data: pd.DataFrame, areas: list[str], target_column: pd.Series):
         return data[target_column].mode().iloc[0]
     
     best_area = max(areas, key=lambda x: calculate_information_gain(data, data[x], target_column))
-    most_common_outcome = data[target_values.name].mode().iloc[0]
+    most_common_outcome = data[target_column.name].mode().iloc[0]
 
     tree = {best_area: {"current_optimal": most_common_outcome}}
     areas = [area for area in areas if area != best_area]
@@ -92,8 +92,12 @@ def find_answer(tree: dict, sample_set: pd.Series):
 
 def validate_data(tree: dict, validate_set: pd.DataFrame):
     correct_prediction = 0
-
-    pass
+    validate_set = validate_set.reset_index()
+    for index, prediction in validate_set.iterrows():
+        if find_answer(tree, prediction) == prediction["Target"]:
+            correct_prediction += 1
+    
+    print(f"Model accuracy is {correct_prediction/len(validate_set)}")
 
 
 if __name__ == "__main__":
@@ -104,4 +108,4 @@ if __name__ == "__main__":
     data_set_entropy = calculate_entropy(train_set, target_values)
     areas_gains = get_areas_gains(train_set, target_values)
     tree = create_tree(train_set, list(areas_gains.keys()), target_values)
-    print(tree)
+    validate_data(tree, validate_set)
