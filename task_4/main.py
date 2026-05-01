@@ -98,7 +98,7 @@ def validate_data(tree: dict, validate_set: pd.DataFrame) -> float:
             correct_prediction += 1
 
     percentage_prediction = float("{:.2f}".format(correct_prediction/len(validate_set) * 100))
-    print(f"Model accuracy is {percentage_prediction}%")
+    # print(f"Model accuracy is {percentage_prediction}%")
     return percentage_prediction
 
 
@@ -108,6 +108,11 @@ def show_depth_dependency_plot(train_set: pd.DataFrame, validate_set: pd.DataFra
     for i in range(10):
         tree = create_tree(train_set, areas, targets, max_depth=i)
         accuracies.append(validate_data(tree, validate_set))
+    plt.plot(range(10), accuracies, color="lime", marker="o")
+    plt.xlabel("Max Tree Depth  allowed")
+    plt.ylabel("Accuracy in %")
+    plt.grid()
+    plt.show()
 
 
 if __name__ == "__main__":
@@ -117,5 +122,7 @@ if __name__ == "__main__":
     target_values = train_set.iloc[:, -1]
     data_set_entropy = calculate_entropy(train_set, target_values)
     areas_gains = get_areas_gains(train_set, target_values)
-    tree = create_tree(train_set, list(areas_gains.keys()), target_values)
-    validate_data(tree, validate_set)
+    # tree = create_tree(train_set, list(areas_gains.keys()), target_values)
+    # validate_data(tree, validate_set)
+
+    show_depth_dependency_plot(train_set, validate_set, list(areas_gains.keys()))
