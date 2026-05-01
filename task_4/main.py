@@ -11,19 +11,11 @@ def get_csv_data(file_name: str) -> pd.DataFrame:
 
 
 def get_areas_gains(training_data: pd.DataFrame, target_column: pd.Series) -> dict[str, float]:
-    information_gain_dict = {
-        "Top-left": 0.0,
-        "Top": 0.0,
-        "Top-right": 0.0,
-        "Left": 0.0,
-        "Middle": 0.0,
-        "Right": 0.0,
-        "Bottom-left": 0.0,
-        "Bottom": 0.0,
-        "Bottom-right": 0.0
-    }
-    for index, area in enumerate(information_gain_dict.keys()):
-        curr_info_gain = calculate_information_gain(training_data, training_data.iloc[:, index], target_column)
+    feature_columns = [col for col in training_data.columns if col != target_column.name]
+    
+    information_gain_dict = {}
+    for area in feature_columns:
+        curr_info_gain = calculate_information_gain(training_data, training_data[area], target_column)
         information_gain_dict[area] = curr_info_gain
     return information_gain_dict
 
@@ -119,7 +111,7 @@ def print_confusion_matrix(tree: dict, validate_set: pd.DataFrame):
     print(f"NEGATIVE|  {matrix["false_positive"]}     |   {matrix["true_negative"]}")
 
 
-def get_accuracy_byvalidate_data(tree: dict, validate_set: pd.DataFrame) -> float:
+def get_accuracy_by_data(tree: dict, validate_set: pd.DataFrame) -> float:
     correct_prediction = 0
 
     validate_set = validate_set.reset_index()
@@ -128,7 +120,6 @@ def get_accuracy_byvalidate_data(tree: dict, validate_set: pd.DataFrame) -> floa
             correct_prediction += 1
 
     percentage_prediction = float("{:.2f}".format(correct_prediction/len(validate_set) * 100))
-    # print(f"Model accuracy is {percentage_prediction}%")
     return percentage_prediction
 
 
@@ -146,7 +137,7 @@ def show_depth_dependency_plot(train_set: pd.DataFrame, validate_set: pd.DataFra
     accuracies = []
     for i in range(10):
         tree = create_tree(train_set, areas, targets, max_depth=i)
-        accuracies.append(get_accuracy_byvalidate_data(tree, validate_set))
+        accuracies.append(get_accuracy_by_data(tree, validate_set))
     plt.plot(range(10), accuracies, color="lime", marker="o")
     plt.xlabel("Max Tree Depth  allowed")
     plt.ylabel("Accuracy in %")
@@ -161,8 +152,7 @@ if __name__ == "__main__":
     target_values = train_set.iloc[:, -1]
     data_set_entropy = calculate_entropy(train_set, target_values)
     areas_gains = get_areas_gains(train_set, target_values)
-    # tree = create_tree(train_set, list(areas_gains.keys()), target_values)
-    # validate_data(tree, validate_set)
-    show_depth_confusion_marix_dependency(train_set, validate_set, list(areas_gains.keys()))
+    final_tree = create_tree(train_set, list(areas_gains.keys()), target_values, max_depth=5)
 
-    
+    final_outcome = get_accuracy_by_data(final_tree, test_set)
+    print(f"Outcome for test_set is {final_outcome}%")
