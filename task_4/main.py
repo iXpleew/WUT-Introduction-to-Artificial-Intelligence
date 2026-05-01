@@ -2,6 +2,9 @@ from matplotlib import pyplot as plt
 import pandas as pd 
 import numpy as np
 import math
+from sklearn.model_selection import train_test_split
+from sklearn.tree import DecisionTreeClassifier
+from sklearn.metrics import accuracy_score
 
 
 def get_csv_data(file_name: str) -> pd.DataFrame:
@@ -145,7 +148,7 @@ def show_depth_dependency_plot(train_set: pd.DataFrame, validate_set: pd.DataFra
     plt.show()
 
 
-if __name__ == "__main__":
+def create_tree_from_id3():
     provided_data = get_csv_data("task_4/tic+tac+toe+endgame/tic-tac-toe.data")
     train_set, validate_set, test_set = split_data(provided_data)
 
@@ -156,3 +159,25 @@ if __name__ == "__main__":
 
     final_outcome = get_accuracy_by_data(final_tree, test_set)
     print(f"Outcome for test_set is {final_outcome}%")
+
+
+def create_tree_from_sklearn():
+    provided_data = get_csv_data("task_4/tic+tac+toe+endgame/tic-tac-toe.data")
+    
+    data_set = provided_data.iloc[:, :-1]
+    output_series = provided_data.iloc[:, -1]
+    data_set = pd.get_dummies(data_set);
+
+    x_train, x_test, y_train, y_test = train_test_split(data_set, output_series)
+
+    clf = DecisionTreeClassifier(random_state=1)    
+    clf.fit(x_train, y_train)
+
+    predictions = clf.predict(x_test)
+    accuracy = accuracy_score(y_test, predictions)
+    print(f"Scikit learn prediction: {accuracy*100:.2f}%")
+    pass
+
+
+if __name__ == "__main__":
+    create_tree_from_sklearn()
