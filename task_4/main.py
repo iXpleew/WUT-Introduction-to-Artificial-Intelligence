@@ -111,6 +111,14 @@ def get_confusion_matrix(tree:dict, validate_set: pd.DataFrame) -> dict:
     return confusion_matrix
 
 
+def print_confusion_matrix(tree: dict, validate_set: pd.DataFrame):
+    matrix = get_confusion_matrix(tree, validate_set)
+    print(f".             PREDICTED")
+    print(f"ACTUAL  | POSITIVE | NEGATIVE ")
+    print(f"POSITIVE|{matrix["true_positive"]} | {matrix["false_negative"]}")
+    print(f"NEGATIVE|{matrix["false_positive"]} | {matrix["true_negative"]}")
+
+
 def get_accuracy_byvalidate_data(tree: dict, validate_set: pd.DataFrame) -> float:
     correct_prediction = 0
 
@@ -147,4 +155,4 @@ if __name__ == "__main__":
     # tree = create_tree(train_set, list(areas_gains.keys()), target_values)
     # validate_data(tree, validate_set)
 
-    show_depth_dependency_plot(train_set, validate_set, list(areas_gains.keys()))
+    
