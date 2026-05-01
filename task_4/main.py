@@ -60,11 +60,11 @@ def split_data(data_set: pd.DataFrame) -> tuple:
     return data_set.iloc[:first_border], data_set.iloc[first_border:second_border], data_set.iloc[second_border:]
 
 
-def create_tree(data: pd.DataFrame, areas: list[str], target_column: pd.Series):
+def create_tree(data: pd.DataFrame, areas: list[str], target_column: pd.Series, max_depth = 9):
     if len(data[target_column.name].unique()) == 1:
         return data[target_column.name].iloc[0]
     
-    if len(areas) == 0:
+    if len(areas) == 0 or max_depth == 0:
         return data[target_column].mode().iloc[0]
     
     best_area = max(areas, key=lambda x: calculate_information_gain(data, data[x], target_column))
@@ -74,7 +74,7 @@ def create_tree(data: pd.DataFrame, areas: list[str], target_column: pd.Series):
     areas = [area for area in areas if area != best_area]
     for value in data[best_area].unique():
         subset = data[data[best_area] == value]
-        tree[best_area][value] = create_tree(subset, areas, target_column)
+        tree[best_area][value] = create_tree(subset, areas, target_column, max_depth-1)
     return tree
 
 
