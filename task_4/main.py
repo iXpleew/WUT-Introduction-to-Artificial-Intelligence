@@ -60,12 +60,12 @@ def split_data(data_set: pd.DataFrame) -> tuple:
     return data_set.iloc[:first_border], data_set.iloc[first_border:second_border], data_set.iloc[second_border:]
 
 
-def create_tree(data: pd.DataFrame, areas: list[str], target_column: pd.Series, max_depth = 9):
+def create_tree(data: pd.DataFrame, areas: list[str], target_column: pd.Series, max_depth = 5):
     if len(data[target_column.name].unique()) == 1:
         return data[target_column.name].iloc[0]
     
     if len(areas) == 0 or max_depth == 0:
-        return data[target_column].mode().iloc[0]
+        return data[target_column.name].mode().iloc[0]
     
     best_area = max(areas, key=lambda x: calculate_information_gain(data, data[x], target_column))
     most_common_outcome = data[target_column.name].mode().iloc[0]
@@ -90,14 +90,24 @@ def find_answer(tree: dict, sample_set: pd.Series):
             return find_answer(tree[current_area][char_on_area], sample_set)
 
 
-def validate_data(tree: dict, validate_set: pd.DataFrame):
+def validate_data(tree: dict, validate_set: pd.DataFrame) -> float:
     correct_prediction = 0
     validate_set = validate_set.reset_index()
     for index, prediction in validate_set.iterrows():
         if find_answer(tree, prediction) == prediction["Target"]:
             correct_prediction += 1
-    
-    print(f"Model accuracy is {correct_prediction/len(validate_set) * 100:.2f}%")
+
+    percentage_prediction = float("{:.2f}".format(correct_prediction/len(validate_set) * 100))
+    print(f"Model accuracy is {percentage_prediction}%")
+    return percentage_prediction
+
+
+def show_depth_dependency_plot(train_set: pd.DataFrame, validate_set: pd.DataFrame, areas: list[str]):
+    targets = train_set.iloc[:,-1]
+    accuracies = []
+    for i in range(10):
+        tree = create_tree(train_set, areas, targets, max_depth=i)
+        accuracies.append(validate_data(tree, validate_set))
 
 
 if __name__ == "__main__":
