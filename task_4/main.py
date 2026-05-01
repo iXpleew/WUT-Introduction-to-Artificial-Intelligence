@@ -100,11 +100,11 @@ def get_confusion_matrix(tree:dict, validate_set: pd.DataFrame) -> dict:
     validate_set = validate_set.reset_index()
     for index, prediction in validate_set.iterrows():
         model_answer = find_answer(tree, prediction)
-        if model_answer == prediction["Target"] == True:
+        if model_answer == prediction["Target"] == "positive":
             confusion_matrix["true_positive"] += 1
-        elif model_answer == prediction["Target"] == False:
+        elif model_answer == prediction["Target"] == "negative":
             confusion_matrix["true_negative"] += 1
-        elif model_answer != prediction["Target"] == True:
+        elif model_answer != prediction["Target"] == "positive":
             confusion_matrix["false_negative"] += 1
         else:
             confusion_matrix["false_positive"] += 1
@@ -115,8 +115,8 @@ def print_confusion_matrix(tree: dict, validate_set: pd.DataFrame):
     matrix = get_confusion_matrix(tree, validate_set)
     print(f".             PREDICTED")
     print(f"ACTUAL  | POSITIVE | NEGATIVE ")
-    print(f"POSITIVE|{matrix["true_positive"]} | {matrix["false_negative"]}")
-    print(f"NEGATIVE|{matrix["false_positive"]} | {matrix["true_negative"]}")
+    print(f"POSITIVE|  {matrix["true_positive"]}       |   {matrix["false_negative"]}")
+    print(f"NEGATIVE|  {matrix["false_positive"]}     |   {matrix["true_negative"]}")
 
 
 def get_accuracy_byvalidate_data(tree: dict, validate_set: pd.DataFrame) -> float:
@@ -130,6 +130,15 @@ def get_accuracy_byvalidate_data(tree: dict, validate_set: pd.DataFrame) -> floa
     percentage_prediction = float("{:.2f}".format(correct_prediction/len(validate_set) * 100))
     # print(f"Model accuracy is {percentage_prediction}%")
     return percentage_prediction
+
+
+def show_depth_confusion_marix_dependency(train_set: pd.DataFrame, validate_set: pd.DataFrame, areas: list[str]):
+    targets = train_set.iloc[:,-1]
+    for i in range(10):
+        tree = create_tree(train_set, areas, targets, max_depth=i)
+        print(f"Confusion matrix for depth={i+1}")
+        print_confusion_matrix(tree, validate_set)
+        print()
 
 
 def show_depth_dependency_plot(train_set: pd.DataFrame, validate_set: pd.DataFrame, areas: list[str]):
@@ -154,5 +163,6 @@ if __name__ == "__main__":
     areas_gains = get_areas_gains(train_set, target_values)
     # tree = create_tree(train_set, list(areas_gains.keys()), target_values)
     # validate_data(tree, validate_set)
+    show_depth_confusion_marix_dependency(train_set, validate_set, list(areas_gains.keys()))
 
     
