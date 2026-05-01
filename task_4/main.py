@@ -97,11 +97,11 @@ def validate_data(tree: dict, validate_set: pd.DataFrame):
         if find_answer(tree, prediction) == prediction["Target"]:
             correct_prediction += 1
     
-    print(f"Model accuracy is {correct_prediction/len(validate_set)}")
+    print(f"Model accuracy is {correct_prediction/len(validate_set) * 100:.2f}%")
 
 
 if __name__ == "__main__":
-    provided_data = get_csv_data("tic+tac+toe+endgame/tic-tac-toe.data")
+    provided_data = get_csv_data("task_4/tic+tac+toe+endgame/tic-tac-toe.data")
     train_set, validate_set, test_set = split_data(provided_data)
 
     target_values = train_set.iloc[:, -1]
