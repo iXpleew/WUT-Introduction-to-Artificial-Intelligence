@@ -90,8 +90,30 @@ def find_answer(tree: dict, sample_set: pd.Series):
             return find_answer(tree[current_area][char_on_area], sample_set)
 
 
-def validate_data(tree: dict, validate_set: pd.DataFrame) -> float:
+def get_confusion_matrix(tree:dict, validate_set: pd.DataFrame) -> dict:
+    confusion_matrix = {
+        "true_positive": 0,
+        "false_positive": 0,
+        "false_negative": 0,
+        "true_negative": 0
+    }
+    validate_set = validate_set.reset_index()
+    for index, prediction in validate_set.iterrows():
+        model_answer = find_answer(tree, prediction)
+        if model_answer == prediction["Target"] == True:
+            confusion_matrix["true_positive"] += 1
+        elif model_answer == prediction["Target"] == False:
+            confusion_matrix["true_negative"] += 1
+        elif model_answer != prediction["Target"] == True:
+            confusion_matrix["false_negative"] += 1
+        else:
+            confusion_matrix["false_positive"] += 1
+    return confusion_matrix
+
+
+def get_accuracy_byvalidate_data(tree: dict, validate_set: pd.DataFrame) -> float:
     correct_prediction = 0
+
     validate_set = validate_set.reset_index()
     for index, prediction in validate_set.iterrows():
         if find_answer(tree, prediction) == prediction["Target"]:
@@ -107,7 +129,7 @@ def show_depth_dependency_plot(train_set: pd.DataFrame, validate_set: pd.DataFra
     accuracies = []
     for i in range(10):
         tree = create_tree(train_set, areas, targets, max_depth=i)
-        accuracies.append(validate_data(tree, validate_set))
+        accuracies.append(get_accuracy_byvalidate_data(tree, validate_set))
     plt.plot(range(10), accuracies, color="lime", marker="o")
     plt.xlabel("Max Tree Depth  allowed")
     plt.ylabel("Accuracy in %")
