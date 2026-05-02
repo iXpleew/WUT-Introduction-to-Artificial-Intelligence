@@ -12,7 +12,6 @@ class SudokuSolver:
     def solve(self):
         print("I'm solving!")
         self.check_correctness()
-        pass
 
     
     def check_correctness(self):
