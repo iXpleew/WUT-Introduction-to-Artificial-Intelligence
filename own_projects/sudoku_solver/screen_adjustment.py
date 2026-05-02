@@ -1,14 +1,23 @@
 import tkinter as tk
 
 
-def switch_window_on():
+def main_window():
     root = tk.Tk()
+    switch_window_on(root)
+    get_squares_fields(root)
+    root.mainloop()
+    
+
+def switch_window_on(root: tk.Tk):
     root.title("Sudoku solver by iXpleew")
     root.geometry("600x600")
 
     sudoku_label = tk.Label(root, text="Sudoku solver, enter sample numbers: ")
     sudoku_label.pack()
+    pass
 
+
+def get_squares_fields(root: tk.Tk) -> list[list[tk.Text]]:
     current_x = 135
     current_y = 40
     squares = []
@@ -25,4 +34,4 @@ def switch_window_on():
             current_x += 30
         current_y += 40
         current_x = 135
-    root.mainloop()
+    return squares

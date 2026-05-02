@@ -1,4 +1,6 @@
 import tkinter as tk
+
+
 def check_correctness(position: list[list[tk.Text]]) -> bool:
     parser_position = []
     for index, board in enumerate(position):
