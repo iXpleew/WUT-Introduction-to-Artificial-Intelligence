@@ -1,19 +1,15 @@
 import tkinter as tk
+import sudoku_solver as ssolver
 
 
-def main_window():
-    root = tk.Tk()
-    switch_window_on(root)
-    get_squares_fields(root)
-    root.mainloop()
-    
-
-def switch_window_on(root: tk.Tk):
+def switch_window_on(root: tk.Tk, solver: ssolver.SudokuSolver):
     root.title("Sudoku solver by iXpleew")
     root.geometry("600x600")
 
     sudoku_label = tk.Label(root, text="Sudoku solver, enter sample numbers: ")
     sudoku_label.pack()
+
+    button = tk.Button(root, command=solver.solve, text="Calculate!")
     pass
 
 
@@ -35,3 +31,13 @@ def get_squares_fields(root: tk.Tk) -> list[list[tk.Text]]:
         current_y += 40
         current_x = 135
     return squares
+
+
+def main_window():
+    root = tk.Tk()
+    sudoku_solver = ssolver.SudokuSolver()
+
+    switch_window_on(root, sudoku_solver)
+    position = get_squares_fields(root)
+    root.mainloop()
+ 
