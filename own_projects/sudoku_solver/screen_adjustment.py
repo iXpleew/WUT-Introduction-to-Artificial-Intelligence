@@ -1,5 +1,6 @@
 import tkinter as tk
 
+
 def switch_window_on():
     root = tk.Tk()
     root.title("Sudoku solver by iXpleew")
@@ -10,7 +11,9 @@ def switch_window_on():
 
     current_x = 135
     current_y = 40
+    squares = []
     for i in range(9):
+        squares.append([])
         if i % 3 == 0:
             current_y += 20
         for j in range(9):
@@ -18,6 +21,7 @@ def switch_window_on():
                 current_x += 15
             field = tk.Text(root, height=2, width=2, bg="gray")
             field.place(x=current_x, y=current_y)
+            squares[i].append(field)
             current_x += 30
         current_y += 40
         current_x = 135
