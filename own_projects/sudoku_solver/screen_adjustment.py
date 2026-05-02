@@ -10,6 +10,7 @@ def switch_window_on(root: tk.Tk, solver: ssolver.SudokuSolver):
     sudoku_label.pack()
 
     button = tk.Button(root, command=solver.solve, text="Calculate!")
+    button.pack()
     pass
 
 
