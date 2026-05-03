@@ -28,7 +28,7 @@ class SudokuSolver:
         # first of all check all of the squares if they are uniqe by set
         # !!! emtpy spaces can destroy this algorithm!! remember to add change that allows it!!!!
         for square in self.position:
-            if len(set(square)) != square:
+            if len(set(square)) != len(square):
                 return False
             
         # secondly check horizontally
