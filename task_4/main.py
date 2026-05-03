@@ -149,7 +149,7 @@ def show_depth_dependency_plot(train_set: pd.DataFrame, validate_set: pd.DataFra
 
 
 def create_tree_from_id3():
-    provided_data = get_csv_data("tic+tac+toe+endgame/tic-tac-toe.data")
+    provided_data = get_csv_data("task_4/tic+tac+toe+endgame/tic-tac-toe.data")
     train_set, validate_set, test_set = split_data(provided_data)
 
 
@@ -163,7 +163,7 @@ def create_tree_from_id3():
 
 
 def create_tree_from_sklearn():
-    provided_data = get_csv_data("tic+tac+toe+endgame/tic-tac-toe.data")
+    provided_data = get_csv_data("task_4/tic+tac+toe+endgame/tic-tac-toe.data")
     
     data_set = provided_data.iloc[:, :-1]
     output_series = provided_data.iloc[:, -1]
