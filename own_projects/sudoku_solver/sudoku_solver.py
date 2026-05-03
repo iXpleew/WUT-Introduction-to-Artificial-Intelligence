@@ -10,15 +10,20 @@ class SudokuSolver:
 
     
     def solve(self):
-        print("I'm solving!")
+        self.parse_textfield_values()
         self.check_correctness()
 
     
-    def check_correctness(self):
+    def parse_textfield_values(self):
         parser_position = []
         for index, board in enumerate(self.position):
             parser_position.append([])
             for text_field in board:
                 number = text_field.get('1.0', 'end-1c')
+                parser_position[index].append(number)
                 print(number)
-    
+        self.set_position(parser_position)
+        
+    def check_correctness(self):
+        
+        pass
