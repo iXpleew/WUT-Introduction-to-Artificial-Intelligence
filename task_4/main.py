@@ -152,12 +152,13 @@ def create_tree_from_id3():
     provided_data = get_csv_data("task_4/tic+tac+toe+endgame/tic-tac-toe.data")
     train_set, validate_set, test_set = split_data(provided_data)
 
+
     target_values = train_set.iloc[:, -1]
-    data_set_entropy = calculate_entropy(train_set, target_values)
     areas_gains = get_areas_gains(train_set, target_values)
     final_tree = create_tree(train_set, list(areas_gains.keys()), target_values, max_depth=5)
 
     final_outcome = get_accuracy_by_data(final_tree, test_set)
+    show_depth_confusion_marix_dependency(train_set, validate_set, list(areas_gains.keys()))
     print(f"Outcome for test_set is {final_outcome}%")
 
 
@@ -176,8 +177,9 @@ def create_tree_from_sklearn():
     predictions = clf.predict(x_test)
     accuracy = accuracy_score(y_test, predictions)
     print(f"Scikit learn prediction: {accuracy*100:.2f}%")
-    pass
+
 
 
 if __name__ == "__main__":
+    create_tree_from_id3()
     create_tree_from_sklearn()
