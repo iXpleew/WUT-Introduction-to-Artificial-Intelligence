@@ -1,5 +1,4 @@
 import screen_adjustment as gui_file
-import sudoku_solver as ssolver
 
 
 def main():

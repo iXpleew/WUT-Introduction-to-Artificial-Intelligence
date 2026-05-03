@@ -24,6 +24,14 @@ class SudokuSolver:
                 print(number)
         self.set_position(parser_position)
         
-    def check_correctness(self):
-        
-        pass
+    def check_correctness(self) -> bool:
+        # first of all check all of the squares if they are uniqe by set
+        for square in self.position:
+            if len(set(square)) != square:
+                return False
+            
+        # secondly check horizontally
+        for i in range(3):
+            for j in range(3):
+                return False     
+        return True
